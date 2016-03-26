@@ -7,4 +7,4 @@ brew update
 
 brew install opencv
 
-gem install ruby-opencv -- --with-opencv-dir=`brew --prefix opencv`
+gem install ruby-opencv -- --with-opencv-dir=\`brew --prefix opencv\`
