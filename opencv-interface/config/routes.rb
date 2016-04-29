@@ -1,17 +1,17 @@
 Rails.application.routes.draw do
 
   resources :images
-  devise_for :users, controllers: {
-        sessions: 'users/sessions'
-      }
+  devise_for :users, :controllers => { registrations: 'users/registrations', sessions: "users/sessions", passwords: 'users/passwords' } do
+    get "/", :to => "users/sessions#create"
+  end
 
   authenticated :user do
     root 'images#index'
   end
 
-  # unauthenticated :users do
-  #   devise_scope :users do
-  #     get "/" => "users/sessions#new"
-  #   end
-  # end
+  unauthenticated :user do
+    devise_scope :user do
+      get "/" => "users/sessions#new"
+    end
+  end
 end
