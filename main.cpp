@@ -58,16 +58,16 @@ Mat Laplacian(Mat img, unsigned int filterSize){
     //laplaciano
     for(int y = 0; y < dst.rows - 1; y++){
         for(int x = 0; x < dst.cols - 1; x++){
-            
+
             window2[0] = dst.at<uchar>(y - 1 ,x - 1);
             window2[1] = dst.at<uchar>(y, x - 1);
             window2[2] = dst.at<uchar>(y + 1, x - 1);
             window2[6] = dst.at<uchar>(y - 1, x + 1);
             window2[7] = dst.at<uchar>(y, x + 1);
             window2[8] = dst.at<uchar>(y + 1, x + 1);
-            
+
             int threshold = 100;
-            
+
             float resultado=window2[0]*(-1)+window2[1]*(-2)+window2[2]*(-1)+window2[6]+window2[7]*(2)+window2[8];
             //threshold
             if(resultado<threshold && resultado>-threshold){
@@ -83,22 +83,34 @@ Mat Laplacian(Mat img, unsigned int filterSize){
 int main()
 {
     Mat src, dst;
-    
+
     //Carregar a imagem
     src = imread("/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/lena.jpg", CV_LOAD_IMAGE_GRAYSCALE);
-    
+
     if( !src.data )
     { return -1; }
     //criar uma janela deslisante de tamanho n
-    
+
     namedWindow("final" );
     imshow("final", dst);
-    
+
     namedWindow("inicial");
     imshow("initial", src);
     
     waitKey();
-    
-    
+
+
     return 0;
 }
+
+void insertionSort(int window[])
+ {
+     int temp, i , j;
+     for(i = 0; i < 9; i++){
+         temp = window[i];
+         for(j = i-1; j >= 0 && temp < window[j]; j--){
+             window[j+1] = window[j];
+         }
+         window[j+1] = temp;
+     }
+ }
