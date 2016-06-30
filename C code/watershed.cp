@@ -11,7 +11,7 @@ using namespace std;
 using namespace cv;
 
 Mat lab, val;
-//Mat img = imread("/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/lena.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+//Mat img = imread("lena.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 float data[11][10] =
 {{3,5,5,2,8,8,8,11,10,10},
     {5,5,11,11,8,11,11,8,10,10},
@@ -31,12 +31,11 @@ const float INIT = 0;
 const float MASK = -2;
 const float WSHED = 0;
 int changed = 0;
-int new_label = 0;
+float new_label = 0;
 int scan_step2 = 1;
 int scan_step3 = 1;
 float VMAX, LMAX;
 int curlab = 0;
-float New_label = 0;
 
 void step1(int x, int y){
     if(val.at<float>(x,y) != 1){
@@ -97,22 +96,22 @@ void step3(int x, int y){
     if(val.at<float>(x,y) == 0){
 
         for(int i=-1; i<=1; i++){
-            for(int j=-1; j<=1; j++){
-                //Casos de borda
-                if(x == 0 && i < 0) continue;
-                if(y == 0 && j < 0) continue;
-                if(x == img.rows-1  && i > 0) continue;
-                if(y == img.cols-1 && j > 0) continue;
-                //nao pegar o pixel no meio
-                if(i == 0 && j == 0) continue;
+          for(int j=-1; j<=1; j++){
+            //Casos de borda
+            if(x == 0 && i < 0) continue;
+            if(y == 0 && j < 0) continue;
+            if(x == img.rows-1  && i > 0) continue;
+            if(y == img.cols-1 && j > 0) continue;
+            //nao pegar o pixel no meio
+            if(i == 0 && j == 0) continue;
 
-                if(img.at<float>(x,y) == val.at<float>(x+i,y+j) && lab.at<float>(x+i,y+j)>0 && lab.at<float>(x+i,y+j) < lmin){
-                    lmin = lab.at<float>(x+i,y+j);
-                }
-                if(lmin == LMAX && lab.at<float>(x,y) == 0){
-                    lmin = ++New_label;
-                }
+            if(img.at<float>(x,y) == img.at<float>(x+i,y+j) && lab.at<float>(x+i,y+j)>0 && lab.at<float>(x+i,y+j) < lmin){
+                lmin = lab.at<float>(x+i,y+j);
             }
+          }
+        }
+        if(lmin == LMAX && lab.at<float>(x,y) == 0){
+          lmin = ++new_label;
         }
 
     }else{
@@ -189,7 +188,7 @@ void step3(int x, int y){
 
 int main(){
     VMAX = img.rows*img.cols;
-    cout<<img<<endl;
+//    cout<<img<<endl;
     //inicializar o tamanho da matriz
     lab = img.clone();
     val = img.clone();
@@ -236,7 +235,7 @@ int main(){
     }
 
 //    Step 2
-    cout<<val<<endl;
+//    cout<<val<<endl;
 //    cout<<LMAX;
 
     //encontrar as labels
@@ -248,8 +247,8 @@ int main(){
                 step3(x, y);
             }
         }
-        cout<<lab<<endl;
-        cin.get();
+//        cout<<lab<<endl;
+//        cin.get();
         if(changed == 0){
             scan_step3 = 0;
         }else{
@@ -267,7 +266,7 @@ int main(){
     }
 
 //    Step 3
-    cout<<lab<<endl;
+//    cout<<lab<<endl;
 
 
 
@@ -275,5 +274,6 @@ int main(){
 //    imshow("original", img);
 //    imshow("final", lab);
 
-    cin.get();
+//    cin.get();
 }
+
