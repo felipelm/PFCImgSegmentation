@@ -11,25 +11,9 @@ using namespace std;
 using namespace cv;
 
 Mat lab, val;
-//Mat img = imread("lena.jpg", CV_LOAD_IMAGE_GRAYSCALE);
-float data[11][10] =
-{{3,5,5,2,8,8,8,11,10,10},
-    {5,5,11,11,8,11,11,8,10,10},
-    {11,5,11,11,9,9,9,9,8,10},
-    {11,11,11,7,7,7,7,9,9,8},
-    {11,11,11,11,11,9,7,10,8,10},
-    {11,10,11,9,7,7,9,9,10,8},
-    {11,10,11,9,11,9,10,10,8,10},
-    {11,11,11,8,8,8,8,8,10,10},
-    {11,11,11,11,10,10,10,10,10,10},
-    {10,10,10,10,10,10,10,10,10,10},
-    {11,11,11,11,10,10,10,10,10,10}};
-
-Mat img = Mat(11, 10, CV_32F, data);
+Mat img = imread("lena.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 
 const float INIT = 0;
-const float MASK = -2;
-const float WSHED = 0;
 int changed = 0;
 float new_label = 0;
 int scan_step2 = 1;
@@ -52,8 +36,6 @@ void step1(int x, int y){
                 //se algum vizinho for menor val(x,y) = 1
                 if(val.at<float>(x,y) != 1){
                     if(img.at<float>(x,y) > img.at<float>(x+i,y+j)) val.at<float>(x,y) = 1;
-//                    cout<<i<<" "<<j<<" X: "<<x<<" Y: "<<y<<" VAL: "<<val.at<float>(x,y)<<" CENTRO: "<<img.at<float>(x,y)<<" OUTRO: "<<img.at<float>(x+i,y+j);
-//                    cin.get();
                 }
             }
         }
@@ -63,7 +45,7 @@ void step1(int x, int y){
 void step2(int x, int y){
     if(val.at<float>(x,y) != 1){
         float min= VMAX;
-
+        
         for(int i=-1; i<=1; i++){
             for(int j=-1; j<=1; j++){
                 //Casos de borda
@@ -78,7 +60,7 @@ void step2(int x, int y){
                 if(img.at<float>(x,y) == img.at<float>(x+i,y+j) && val.at<float>(x+i,y+j) > 0 && val.at<float>(x+i,y+j) < min){
                     min = val.at<float>(x+i,y+j);
                 }
-
+                
                 //novo valor do pixel baseado nos minimos vizinhos
                 if(min != VMAX && val.at<float>(x,y) != min + 1 && val.at<float>(x,y) < min && val.at<float>(x,y)==0){
                     val.at<float>(x,y) = min+1;
@@ -94,26 +76,26 @@ void step3(int x, int y){
     float lmin = LMAX;
     float fmin = img.at<float>(x, y);
     if(val.at<float>(x,y) == 0){
-
+        
         for(int i=-1; i<=1; i++){
-          for(int j=-1; j<=1; j++){
-            //Casos de borda
-            if(x == 0 && i < 0) continue;
-            if(y == 0 && j < 0) continue;
-            if(x == img.rows-1  && i > 0) continue;
-            if(y == img.cols-1 && j > 0) continue;
-            //nao pegar o pixel no meio
-            if(i == 0 && j == 0) continue;
-
-            if(img.at<float>(x,y) == img.at<float>(x+i,y+j) && lab.at<float>(x+i,y+j)>0 && lab.at<float>(x+i,y+j) < lmin){
-                lmin = lab.at<float>(x+i,y+j);
+            for(int j=-1; j<=1; j++){
+                //Casos de borda
+                if(x == 0 && i < 0) continue;
+                if(y == 0 && j < 0) continue;
+                if(x == img.rows-1  && i > 0) continue;
+                if(y == img.cols-1 && j > 0) continue;
+                //nao pegar o pixel no meio
+                if(i == 0 && j == 0) continue;
+                
+                if(img.at<float>(x,y) == img.at<float>(x+i,y+j) && lab.at<float>(x+i,y+j)>0 && lab.at<float>(x+i,y+j) < lmin){
+                    lmin = lab.at<float>(x+i,y+j);
+                }
             }
-          }
         }
         if(lmin == LMAX && lab.at<float>(x,y) == 0){
-          lmin = ++new_label;
+            lmin = ++new_label;
         }
-
+        
     }else{
         if(val.at<float>(x,y) == 1){
             for(int i=-1; i<=1; i++){
@@ -125,13 +107,13 @@ void step3(int x, int y){
                     if(y == img.cols-1 && j > 0) continue;
                     //nao pegar o pixel no meio
                     if(i == 0 && j == 0) continue;
-
+                    
                     if(img.at<float>(x+i,y+j)<fmin){
                         fmin = img.at<float>(x+i,y+j);
                     }
                 }
             }
-
+            
             for(int i=-1; i<=1; i++){
                 for(int j=-1; j<=1; j++){
                     //Casos de borda
@@ -141,7 +123,7 @@ void step3(int x, int y){
                     if(y == img.cols-1 && j > 0) continue;
                     //nao pegar o pixel no meio
                     if(i == 0 && j == 0) continue;
-
+                    
                     if(img.at<float>(x+i,y+j) == fmin && lab.at<float>(x+i,y+j) > 0 && lab.at<float>(x+i,y+j) < lmin){
                         lmin = lab.at<float>(x+i,y+j);
                     }
@@ -157,7 +139,7 @@ void step3(int x, int y){
                     if(y == img.cols-1 && j > 0) continue;
                     //nao pegar o pixel no meio
                     if(i == 0 && j == 0) continue;
-
+                    
                     if(img.at<float>(x+i,y+j) == img.at<float>(x,y) && (val.at<float>(x+i,y+j) == (val.at<float>(x,y) -1)) && lab.at<float>(x+i, y+j)>0 && lab.at<float>(x+i,y+j) < lmin){
                         lmin = lab.at<float>(x+i,y+j);
                     }
@@ -165,30 +147,15 @@ void step3(int x, int y){
             }
         }
     }
-
-//    for(int i=-1; i<=1; i++){
-//        for(int j=-1; j<=1; j++){
-//            //Casos de borda
-//            if(x == 0 && i < 0) continue;
-//            if(y == 0 && j < 0) continue;
-//            if(x == img.rows-1  && i > 0) continue;
-//            if(y == img.cols-1 && j > 0) continue;
-//            //nao pegar o pixel no meio
-//            if(i == 0 && j == 0) continue;
-            //diferente do algoritmo proposto lab.at<float>(x+i,y+j)
-            if(lmin != LMAX && lab.at<float>(x,y) != lmin){
-                lab.at<float>(x,y) = lmin;
-                changed = 1;
-            }
-    cout<<lab;
-    cin.get();
-//        }
-//    }
+    
+    if(lmin != LMAX && lab.at<float>(x,y) != lmin){
+        lab.at<float>(x,y) = lmin;
+        changed = 1;
+    }
 }
 
 int main(){
     VMAX = img.rows*img.cols;
-//    cout<<img<<endl;
     //inicializar o tamanho da matriz
     lab = img.clone();
     val = img.clone();
@@ -206,9 +173,7 @@ int main(){
             step1(x, y);
         }
     }
-//    Step 1
-//    cout<<val<<endl;
-
+    
     //encontrar os plateaus mesmo pixel greyscale a partir dos minimos
     while(scan_step2 == 1){
         changed = 0;
@@ -233,11 +198,7 @@ int main(){
             }
         }
     }
-
-//    Step 2
-//    cout<<val<<endl;
-//    cout<<LMAX;
-
+    
     //encontrar as labels
     while(scan_step3 == 1){
         changed = 0;
@@ -247,8 +208,6 @@ int main(){
                 step3(x, y);
             }
         }
-//        cout<<lab<<endl;
-//        cin.get();
         if(changed == 0){
             scan_step3 = 0;
         }else{
@@ -264,16 +223,9 @@ int main(){
             }
         }
     }
-
-//    Step 3
-//    cout<<lab<<endl;
-
-
-
-
-//    imshow("original", img);
-//    imshow("final", lab);
-
-//    cin.get();
+    
+    imshow("original", img);
+    imshow("final", lab);
+    
+    cin.get();
 }
-
