@@ -45,7 +45,7 @@ void step1(int x, int y){
 void step2(int x, int y){
     if(val.at<float>(x,y) != 1){
         float min= VMAX;
-        
+
         for(int i=-1; i<=1; i++){
             for(int j=-1; j<=1; j++){
                 //Casos de borda
@@ -60,7 +60,7 @@ void step2(int x, int y){
                 if(img.at<float>(x,y) == img.at<float>(x+i,y+j) && val.at<float>(x+i,y+j) > 0 && val.at<float>(x+i,y+j) < min){
                     min = val.at<float>(x+i,y+j);
                 }
-                
+
                 //novo valor do pixel baseado nos minimos vizinhos
                 if(min != VMAX && val.at<float>(x,y) != min + 1 && val.at<float>(x,y) < min && val.at<float>(x,y)==0){
                     val.at<float>(x,y) = min+1;
@@ -76,7 +76,7 @@ void step3(int x, int y){
     float lmin = LMAX;
     float fmin = img.at<float>(x, y);
     if(val.at<float>(x,y) == 0){
-        
+
         for(int i=-1; i<=1; i++){
             for(int j=-1; j<=1; j++){
                 //Casos de borda
@@ -86,7 +86,7 @@ void step3(int x, int y){
                 if(y == img.cols-1 && j > 0) continue;
                 //nao pegar o pixel no meio
                 if(i == 0 && j == 0) continue;
-                
+
                 if(img.at<float>(x,y) == img.at<float>(x+i,y+j) && lab.at<float>(x+i,y+j)>0 && lab.at<float>(x+i,y+j) < lmin){
                     lmin = lab.at<float>(x+i,y+j);
                 }
@@ -95,7 +95,7 @@ void step3(int x, int y){
         if(lmin == LMAX && lab.at<float>(x,y) == 0){
             lmin = ++new_label;
         }
-        
+
     }else{
         if(val.at<float>(x,y) == 1){
             for(int i=-1; i<=1; i++){
@@ -107,13 +107,13 @@ void step3(int x, int y){
                     if(y == img.cols-1 && j > 0) continue;
                     //nao pegar o pixel no meio
                     if(i == 0 && j == 0) continue;
-                    
+
                     if(img.at<float>(x+i,y+j)<fmin){
                         fmin = img.at<float>(x+i,y+j);
                     }
                 }
             }
-            
+
             for(int i=-1; i<=1; i++){
                 for(int j=-1; j<=1; j++){
                     //Casos de borda
@@ -123,7 +123,7 @@ void step3(int x, int y){
                     if(y == img.cols-1 && j > 0) continue;
                     //nao pegar o pixel no meio
                     if(i == 0 && j == 0) continue;
-                    
+
                     if(img.at<float>(x+i,y+j) == fmin && lab.at<float>(x+i,y+j) > 0 && lab.at<float>(x+i,y+j) < lmin){
                         lmin = lab.at<float>(x+i,y+j);
                     }
@@ -139,7 +139,7 @@ void step3(int x, int y){
                     if(y == img.cols-1 && j > 0) continue;
                     //nao pegar o pixel no meio
                     if(i == 0 && j == 0) continue;
-                    
+
                     if(img.at<float>(x+i,y+j) == img.at<float>(x,y) && (val.at<float>(x+i,y+j) == (val.at<float>(x,y) -1)) && lab.at<float>(x+i, y+j)>0 && lab.at<float>(x+i,y+j) < lmin){
                         lmin = lab.at<float>(x+i,y+j);
                     }
@@ -147,7 +147,7 @@ void step3(int x, int y){
             }
         }
     }
-    
+
     if(lmin != LMAX && lab.at<float>(x,y) != lmin){
         lab.at<float>(x,y) = lmin;
         changed = 1;
@@ -173,7 +173,7 @@ int main(){
             step1(x, y);
         }
     }
-    
+
     //encontrar os plateaus mesmo pixel greyscale a partir dos minimos
     while(scan_step2 == 1){
         changed = 0;
@@ -198,7 +198,7 @@ int main(){
             }
         }
     }
-    
+
     //encontrar as labels
     while(scan_step3 == 1){
         changed = 0;
@@ -223,9 +223,20 @@ int main(){
             }
         }
     }
-    
-    imshow("original", img);
-    imshow("final", lab);
-    
+
+//    imwrite("final.jpg", lab);
+    for(int x = 0; x < lab.rows; x++){
+      for(int y = 0; y < lab.cols; y++){
+        if(lab.at<float>(x,y) == 0){
+          lab.at<float>(x,y) = img.at<float>(x,y);
+        }
+        else {
+          lab.at<float>(x,y) = 0;
+        }
+      }
+    }
+//    imshow("original", img);
+    imwrite("original.jpg", lab);
+
     cin.get();
 }
