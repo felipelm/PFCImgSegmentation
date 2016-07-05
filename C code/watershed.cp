@@ -14,7 +14,7 @@ using namespace cv;
 
 Mat lab, val, colored;
 float max_pixel;
-Mat img = imread("/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/lena.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+Mat img = imread("lena.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 //Mat img = imread("/Users/felipemachado/Documents/OpenCV/workspace/bob-esponja.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 //Mat img = imread("/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/chessboard.png", CV_LOAD_IMAGE_GRAYSCALE);
 //Mat img = imread("/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/cards.png", CV_LOAD_IMAGE_GRAYSCALE);
@@ -46,17 +46,18 @@ int scan_step2 = 1;
 int scan_step3 = 1;
 float VMAX, LMAX;
 int curlab = 0;
+int windowSize = 20;
 
 void step1(int x, int y){
     if(val.at<float>(x,y) != 1.0){
         //inspecionar os vizinhos do pixel para setar o marcador
-        for(int i=-1; i<=1; i++){
-            for(int j=-1; j<=1; j++){
+        for(int i=-windowSize; i<=windowSize; i++){
+            for(int j=-windowSize; j<=windowSize; j++){
                 //Casos de borda
-                if(x == 0 && i < 0) continue;
-                if(y == 0 && j < 0) continue;
-                if(x == img.rows-1 && i > 0) continue;
-                if(y == img.cols-1 && j > 0) continue;
+                if(x+i < 0) continue;
+                if(y+j < 0) continue;
+                if(x+i > img.rows-1) continue;
+                if(y+j > img.cols-1) continue;
                 //nao pegar o pixel no meio
                 if(i == 0 && j == 0) continue;
                 //se algum vizinho for menor val(x,y) = 1
@@ -69,14 +70,14 @@ void step1(int x, int y){
 void step2(int x, int y){
     if(val.at<float>(x,y) != 1){
         float min= VMAX;
-        
-        for(int i=-1; i<=1; i++){
-            for(int j=-1; j<=1; j++){
+
+        for(int i=-windowSize; i<=windowSize; i++){
+            for(int j=-windowSize; j<=windowSize; j++){
                 //Casos de borda
-                if(x == 0 && i < 0) continue;
-                if(y == 0 && j < 0) continue;
-                if(x == img.rows-1  && i > 0) continue;
-                if(y == img.cols-1 && j > 0) continue;
+                if(x+i < 0) continue;
+                if(y+j < 0) continue;
+                if(x+i > img.rows-1) continue;
+                if(y+j > img.cols-1) continue;
                 //nao pegar o pixel no meio
                 if(i == 0 && j == 0) continue;
                 //min = maior vizinho
@@ -85,7 +86,7 @@ void step2(int x, int y){
                     min = val.at<float>(x+i,y+j);
                 }
             }
-            
+
         }
         //novo valor do pixel baseado nos minimos vizinhos
         if(min != VMAX && val.at<float>(x,y) != min + 1 && val.at<float>(x,y) < min && val.at<float>(x,y)==0){
@@ -100,17 +101,17 @@ void step3(int x, int y){
     float lmin = LMAX;
     float fmin = img.at<float>(x, y);
     if(cmpf(val.at<float>(x,y) , 0.0)){
-        
-        for(int i=-1; i<=1; i++){
-            for(int j=-1; j<=1; j++){
-                //Casos de borda
-                if(x == 0 && i < 0) continue;
-                if(y == 0 && j < 0) continue;
-                if(x == img.rows-1  && i > 0) continue;
-                if(y == img.cols-1 && j > 0) continue;
+
+      for(int i=-windowSize; i<=windowSize; i++){
+          for(int j=-windowSize; j<=windowSize; j++){
+              //Casos de borda
+              if(x+i < 0) continue;
+              if(y+j < 0) continue;
+              if(x+i > img.rows-1) continue;
+              if(y+j > img.cols-1) continue;
                 //nao pegar o pixel no meio
                 if(i == 0 && j == 0) continue;
-                
+
                 if(cmpf(img.at<float>(x,y), img.at<float>(x+i,y+j)) && lab.at<float>(x+i,y+j) > 0.0 && lab.at<float>(x+i,y+j) < lmin){
                     lmin = lab.at<float>(x+i,y+j);
                 }
@@ -119,51 +120,51 @@ void step3(int x, int y){
         if(cmpf(lmin, LMAX) && cmpf(lab.at<float>(x,y) , 0.0)){
             lmin = ++new_label;
         }
-        
+
     }else{
         if(cmpf(val.at<float>(x,y), 1.0)){
-            for(int i=-1; i<=1; i++){
-                for(int j=-1; j<=1; j++){
-                    //Casos de borda
-                    if(x == 0 && i < 0) continue;
-                    if(y == 0 && j < 0) continue;
-                    if(x == img.rows-1  && i > 0) continue;
-                    if(y == img.cols-1 && j > 0) continue;
+          for(int i=-windowSize; i<=windowSize; i++){
+              for(int j=-windowSize; j<=windowSize; j++){
+                  //Casos de borda
+                  if(x+i < 0) continue;
+                  if(y+j < 0) continue;
+                  if(x+i > img.rows-1) continue;
+                  if(y+j > img.cols-1) continue;
                     //nao pegar o pixel no meio
                     if(i == 0 && j == 0) continue;
-                    
+
                     if(img.at<float>(x+i,y+j)<fmin){
                         fmin = img.at<float>(x+i,y+j);
                     }
                 }
             }
-            
-            for(int i=-1; i<=1; i++){
-                for(int j=-1; j<=1; j++){
+
+            for(int i=-windowSize; i<=windowSize; i++){
+                for(int j=-windowSize; j<=windowSize; j++){
                     //Casos de borda
-                    if(x == 0 && i < 0) continue;
-                    if(y == 0 && j < 0) continue;
-                    if(x == img.rows-1  && i > 0) continue;
-                    if(y == img.cols-1 && j > 0) continue;
+                    if(x+i < 0) continue;
+                    if(y+j < 0) continue;
+                    if(x+i > img.rows-1) continue;
+                    if(y+j > img.cols-1) continue;
                     //nao pegar o pixel no meio
                     if(i == 0 && j == 0) continue;
-                    
+
                     if(cmpf(img.at<float>(x+i,y+j), fmin) && lab.at<float>(x+i,y+j) > 0.0 && lab.at<float>(x+i,y+j) < lmin){
                         lmin = lab.at<float>(x+i,y+j);
                     }
                 }
             }
         }else{
-            for(int i=-1; i<=1; i++){
-                for(int j=-1; j<=1; j++){
+            for(int i=-windowSize; i<=windowSize; i++){
+                for(int j=-windowSize; j<=windowSize; j++){
                     //Casos de borda
-                    if(x == 0 && i < 0) continue;
-                    if(y == 0 && j < 0) continue;
-                    if(x == img.rows-1  && i > 0) continue;
-                    if(y == img.cols-1 && j > 0) continue;
+                    if(x+i < 0) continue;
+                    if(y+j < 0) continue;
+                    if(x+i > img.rows-1) continue;
+                    if(y+j > img.cols-1) continue;
                     //nao pegar o pixel no meio
                     if(i == 0 && j == 0) continue;
-                    
+
                     if(cmpf(img.at<float>(x+i,y+j), img.at<float>(x,y)) && cmpf(val.at<float>(x+i,y+j), (val.at<float>(x,y) -1.0)) && lab.at<float>(x+i, y+j)>0 && lab.at<float>(x+i,y+j) < lmin){
                         lmin = lab.at<float>(x+i,y+j);
                     }
@@ -171,17 +172,16 @@ void step3(int x, int y){
             }
         }
     }
-    
-    for(int i=-1; i<=1; i++){
-        for(int j=-1; j<=1; j++){
-            //Casos de borda
-            //            if(x == 0 && i < 0) continue;
-            //            if(y == 0 && j < 0) continue;
-            //            if(x == img.rows-1  && i > 0) continue;
-            //            if(y == img.cols-1 && j > 0) continue;
-            //            //nao pegar o pixel no meio
-            //            if(i == 0 && j == 0) continue;
-            
+
+    for(int i=-windowSize; i<=windowSize; i++){
+        for(int j=-windowSize; j<=windowSize; j++){
+          if(x+i < 0) continue;
+          if(y+j < 0) continue;
+          if(x+i > img.rows-1) continue;
+          if(y+j > img.cols-1) continue;
+            //nao pegar o pixel no meio
+            if(i == 0 && j == 0) continue;
+
             if(!cmpf(lmin, LMAX) && !cmpf(lab.at<float>(x+i,y+j), lmin)){
                 if(!cmpf(lab.at<float>(x,y), lmin)) changed = 1;
                 lab.at<float>(x,y) = lmin;
@@ -214,14 +214,14 @@ Mat Dispersao(Mat img, int filterSize, float threshold){
                 for(int j=0; j<filterSize; j++){
                     element = (float)img.at<uchar>(y - filterSize/2 + j ,x - filterSize/2 + i);
                     sum +=abs(element-mean)/(filterSize*filterSize);
-                    
+
                 }
             }
-            
+
             dispersao = sum;
             if(dispersao>threshold)    dispersaoImage.at<uchar>(y,x) = dispersao;
             else dispersaoImage.at<uchar>(y,x) = 255;
-            
+
         }
     }
     return dispersaoImage;
@@ -244,7 +244,7 @@ void color_regions(){
         //        cout<<colors[i-1];
         //        cin.get();
     }
-    
+
     // Pinta cada area de uma cor
     for (int i = 0; i < img.rows; i++)
     {
@@ -267,7 +267,7 @@ void initialize_matrix(){
     val = img.clone();
     colored = img.clone();
     colored.convertTo(colored, CV_64F);
-    
+
     //inicializar os valores
     for(int x = 0; x < img.rows; x++){
         for(int y = 0; y < img.cols; y++){
@@ -287,16 +287,16 @@ int main(){
     VMAX = img.rows*img.cols;
     //inicializar o tamanho da matriz
     initialize_matrix();
-    
+
     //encontra menor pixel de cada vizinhanca
     for(int x = 0; x < img.rows; x++){
         for(int y = 0; y < img.cols; y++){
             step1(x, y);
         }
     }
-    
+
     //    cout<<val;
-    
+
     //encontrar os plateaus mesmo pixel greyscale a partir dos minimos
     while(scan_step2 == 1){
         changed = 0;
@@ -321,10 +321,10 @@ int main(){
             }
         }
     }
-    
+
     //    cout<<val<<endl;
     //    cout<<LMAX;
-    
+
     //encontrar as labels
     //    int x=0;
     while(scan_step3 == 1){
@@ -337,9 +337,9 @@ int main(){
                 step3(x, y);
             }
         }
-        //        cout<<lab;
-        //        cin.get();
-        
+              //  cout<<"a";
+              //  cin.get();
+
         if(changed == 0){
             scan_step3 = 0;
         }else{
@@ -354,36 +354,44 @@ int main(){
                 scan_step3 = 0;
             }
         }
-        //        cout<<lab;
-        //        cin.get();
+              //  cout<<"a";
+              //  cin.get();
     }
-    
+
     //    cout<<lab;
-    
+
     max_pixel=0;
-    
+
     for(int x = 0; x < lab.rows; x++){
         for(int y = 0; y < lab.cols; y++){
             if(max_pixel < lab.at<float>(x,y)) max_pixel = lab.at<float>(x,y);
         }
     }
-    
-    //    lab.convertTo(lab, CV_8U);
-    
-    color_regions();
-    
+
+    // lab.convertTo(lab, CV_8U);
+
+//    color_regions();
+
+    cout<<lab;
+    cin.get();
     lab.convertTo(lab, CV_8U,255.0/(max_pixel));
     img.convertTo(img, CV_8U);
     //    colored.convertTo(colored, CV_8U);
-    
-    
+
+
     //    cout<<colored.at<Vec3b>(1, 0)<<colored.at<uchar>(1, 0)<<"teste";
     //    cin.get();
     //        imwrite("colored.jpg", colored);
-    imshow("original", original);
+    cout<<"a";
+    imwrite("original.jpg", original);
+    cout<<lab;
     //    imshow("dispersao", img);
-    imshow("watershed", lab);
-    imshow("color", colored);
-    
+    imwrite("watershed.jpg", lab);
+    cout<<"c";
+    cin.get();
+    imwrite("color.jpg", colored);
+    cout<<"d";
+
     cin.get();
 }
+
