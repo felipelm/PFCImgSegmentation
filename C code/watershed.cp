@@ -43,136 +43,139 @@ float VMAX, LMAX;
 int curlab = 0;
 
 void step1(int x, int y){
-    if(val.at<float>(x,y) != 1){
-        //inspecionar os vizinhos do pixel para setar o marcador
-        for(int i=-1; i<=1; i++){
-            for(int j=-1; j<=1; j++){
-                //Casos de borda
-                if(x == 0 && i < 0) continue;
-                if(y == 0 && j < 0) continue;
-                if(x == img.rows-1 && i > 0) continue;
-                if(y == img.cols-1 && j > 0) continue;
-                //nao pegar o pixel no meio
-                if(i == 0 && j == 0) continue;
-                //se algum vizinho for menor val(x,y) = 1
-                if(val.at<float>(x,y) != 1.0){
-                    if(img.at<float>(x,y) > img.at<float>(x+i,y+j)) val.at<float>(x,y) = 1.0;
-                }
-            }
+  if(val.at<float>(x,y) != 1){
+    //inspecionar os vizinhos do pixel para setar o marcador
+    for(int i=-1; i<=1; i++){
+      for(int j=-1; j<=1; j++){
+        //Casos de borda
+        if(!(x == 0 && i < 0) &&
+           !(y == 0 && j < 0) &&
+           !(x == img.rows-1  && i > 0) &&
+           !(y == img.cols-1 && j > 0) &&
+          //nao pegar o pixel no meio
+           !(i == 0 && j == 0)){
+          //se algum vizinho for menor val(x,y) = 1
+          if(img.at<float>(x,y) > img.at<float>(x+i,y+j)){
+            val.at<float>(x,y) = 1.0;
+          }
         }
+      }
     }
+  }
 }
 
 void step2(int x, int y){
-    if(val.at<float>(x,y) != 1){
-        float min= VMAX;
-
-        for(int i=-1; i<=1; i++){
-            for(int j=-1; j<=1; j++){
-                //Casos de borda
-                if(x == 0 && i < 0) continue;
-                if(y == 0 && j < 0) continue;
-                if(x == img.rows-1  && i > 0) continue;
-                if(y == img.cols-1 && j > 0) continue;
-                //nao pegar o pixel no meio
-                if(i == 0 && j == 0) continue;
-                //min = maior vizinho
-                //encontra o maior valor vizinho de minimo
-                if(img.at<float>(x,y) == img.at<float>(x+i,y+j) && val.at<float>(x+i,y+j) > 0 && val.at<float>(x+i,y+j) < min){
-                    min = val.at<float>(x+i,y+j);
-                }
-
-                //novo valor do pixel baseado nos minimos vizinhos
-                if(min != VMAX && val.at<float>(x,y) != min + 1 && val.at<float>(x,y) < min && val.at<float>(x,y)==0){
-                    val.at<float>(x,y) = min+1.0;
-                    if(min+1.0 > LMAX) LMAX = min+1.0;
-                    changed = 1;
-                }
-            }
+  if(val.at<float>(x,y) != 1){
+    float min= VMAX;
+    for(int i=-1; i<=1; i++){
+      for(int j=-1; j<=1; j++){
+        //Casos de borda
+        if(!(x == 0 && i < 0) &&
+           !(y == 0 && j < 0) &&
+           !(x == img.rows-1  && i > 0) &&
+           !(y == img.cols-1 && j > 0) &&
+          //nao pegar o pixel no meio
+           !(i == 0 && j == 0)){
+           //min = maior vizinho
+          //encontra o maior valor vizinho de minimo
+          if(img.at<float>(x,y) == img.at<float>(x+i,y+j) &&
+             val.at<float>(x+i,y+j) > 0 &&
+             val.at<float>(x+i,y+j) < min){
+            min = val.at<float>(x+i,y+j);
+          }
         }
+      }
     }
+    //novo valor do pixel baseado nos minimos vizinhos
+    if(min != VMAX &&
+      val.at<float>(x,y) != min + 1){
+
+      val.at<float>(x,y) = min+1.0;
+      if(min+1.0 > LMAX) LMAX = min+1.0;
+      changed = 1;
+    }
+  }
 }
 
 void step3(int x, int y){
-    float lmin = LMAX;
-    float fmin = img.at<float>(x, y);
-    if(cmpf(val.at<float>(x,y) , 0.0)){
+  float lmin = LMAX;
+  float fmin = img.at<float>(x, y);
+  if(cmpf(val.at<float>(x,y) , 0.0)){
+    for(int i=-1; i<=1; i++){
+      for(int j=-1; j<=1; j++){
+        //Casos de borda
+        if(!(x == 0 && i < 0) &&
+           !(y == 0 && j < 0) &&
+           !(x == img.rows-1  && i > 0) &&
+           !(y == img.cols-1 && j > 0) &&
+          //nao pegar o pixel no meio
+           !(i == 0 && j == 0)){
 
-        for(int i=-1; i<=1; i++){
-            for(int j=-1; j<=1; j++){
-                //Casos de borda
-                if(x == 0 && i < 0) continue;
-                if(y == 0 && j < 0) continue;
-                if(x == img.rows-1  && i > 0) continue;
-                if(y == img.cols-1 && j > 0) continue;
-                //nao pegar o pixel no meio
-                if(i == 0 && j == 0) continue;
-
-                if(cmpf(img.at<float>(x,y), img.at<float>(x+i,y+j)) && lab.at<float>(x+i,y+j) > 0.0 && lab.at<float>(x+i,y+j) < lmin){
-                    lmin = lab.at<float>(x+i,y+j);
-                }
+            if(cmpf(img.at<float>(x,y), img.at<float>(x+i,y+j)) && lab.at<float>(x+i,y+j) > 0.0 && lab.at<float>(x+i,y+j) < lmin){
+              lmin = lab.at<float>(x+i,y+j);
             }
         }
-        if(cmpf(lmin, LMAX) && cmpf(lab.at<float>(x,y) , 0.0)){
-            lmin = ++new_label;
+      }
+    }
+    if(cmpf(lmin, LMAX) && cmpf(lab.at<float>(x,y) , 0.0)){
+      lmin = ++new_label;
+    }
+  }else{
+    if(cmpf(val.at<float>(x,y), 1.0)){
+      for(int i=-1; i<=1; i++){
+        for(int j=-1; j<=1; j++){
+          //Casos de borda
+          if(!(x == 0 && i < 0) &&
+             !(y == 0 && j < 0) &&
+             !(x == img.rows-1  && i > 0) &&
+             !(y == img.cols-1 && j > 0) &&
+            //nao pegar o pixel no meio
+             !(i == 0 && j == 0)){
+              if(img.at<float>(x+i,y+j)<fmin){
+                  fmin = img.at<float>(x+i,y+j);
+              }
+          }
         }
+      }
 
+      for(int i=-1; i<=1; i++){
+        for(int j=-1; j<=1; j++){
+          //Casos de borda
+          if(!(x == 0 && i < 0) &&
+             !(y == 0 && j < 0) &&
+             !(x == img.rows-1  && i > 0) &&
+             !(y == img.cols-1 && j > 0) &&
+            //nao pegar o pixel no meio
+             !(i == 0 && j == 0)){
+            if(cmpf(img.at<float>(x+i,y+j), fmin) && lab.at<float>(x+i,y+j) > 0.0 && lab.at<float>(x+i,y+j) < lmin){
+              lmin = lab.at<float>(x+i,y+j);
+            }
+          }
+        }
+      }
     }else{
-        if(cmpf(val.at<float>(x,y), 1.0)){
-            for(int i=-1; i<=1; i++){
-                for(int j=-1; j<=1; j++){
-                    //Casos de borda
-                    if(x == 0 && i < 0) continue;
-                    if(y == 0 && j < 0) continue;
-                    if(x == img.rows-1  && i > 0) continue;
-                    if(y == img.cols-1 && j > 0) continue;
-                    //nao pegar o pixel no meio
-                    if(i == 0 && j == 0) continue;
-
-                    if(img.at<float>(x+i,y+j)<fmin){
-                        fmin = img.at<float>(x+i,y+j);
-                    }
-                }
+      for(int i=-1; i<=1; i++){
+        for(int j=-1; j<=1; j++){
+          //Casos de borda
+          if(!(x == 0 && i < 0) &&
+             !(y == 0 && j < 0) &&
+             !(x == img.rows-1  && i > 0) &&
+             !(y == img.cols-1 && j > 0) &&
+            //nao pegar o pixel no meio
+             !(i == 0 && j == 0)){
+            if(cmpf(img.at<float>(x+i,y+j), img.at<float>(x,y)) && cmpf(val.at<float>(x+i,y+j), (val.at<float>(x,y) -1.0)) && lab.at<float>(x+i, y+j)>0 && lab.at<float>(x+i,y+j) < lmin){
+              lmin = lab.at<float>(x+i,y+j);
             }
-
-            for(int i=-1; i<=1; i++){
-                for(int j=-1; j<=1; j++){
-                    //Casos de borda
-                    if(x == 0 && i < 0) continue;
-                    if(y == 0 && j < 0) continue;
-                    if(x == img.rows-1  && i > 0) continue;
-                    if(y == img.cols-1 && j > 0) continue;
-                    //nao pegar o pixel no meio
-                    if(i == 0 && j == 0) continue;
-
-                    if(cmpf(img.at<float>(x+i,y+j), fmin) && lab.at<float>(x+i,y+j) > 0.0 && lab.at<float>(x+i,y+j) < lmin){
-                        lmin = lab.at<float>(x+i,y+j);
-                    }
-                }
-            }
-        }else{
-            for(int i=-1; i<=1; i++){
-                for(int j=-1; j<=1; j++){
-                    //Casos de borda
-                    if(x == 0 && i < 0) continue;
-                    if(y == 0 && j < 0) continue;
-                    if(x == img.rows-1  && i > 0) continue;
-                    if(y == img.cols-1 && j > 0) continue;
-                    //nao pegar o pixel no meio
-                    if(i == 0 && j == 0) continue;
-
-                    if(cmpf(img.at<float>(x+i,y+j), img.at<float>(x,y)) && cmpf(val.at<float>(x+i,y+j), (val.at<float>(x,y) -1.0)) && lab.at<float>(x+i, y+j)>0 && lab.at<float>(x+i,y+j) < lmin){
-                        lmin = lab.at<float>(x+i,y+j);
-                    }
-                }
-            }
+          }
         }
+      }
     }
+  }
 
-    if(!cmpf(lmin, LMAX) && !cmpf(lab.at<float>(x,y), lmin)){
-        lab.at<float>(x,y) = lmin;
-        changed = 1;
-    }
+  if(!cmpf(lmin, LMAX) && !cmpf(lab.at<float>(x,y), lmin)){
+    lab.at<float>(x,y) = lmin;
+    changed = 1;
+  }
 }
 
 int main(){
