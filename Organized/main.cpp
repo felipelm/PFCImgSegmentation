@@ -23,8 +23,8 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata);
 /** @function main */
 int main( int argc, char** argv )
 {
-//    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/lena.jpg");
-    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/piramida_preta.png");
+    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/lena.jpg");
+//    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/piramida_preta.png");
     srcAux = src.clone();
     cvtColor(srcAux, srcAux, CV_BGR2GRAY);
     String source_window = "Source";
@@ -50,11 +50,11 @@ int main( int argc, char** argv )
 
 
     //Dispersao
-//    createTrackbar( "Thresh Disp: ", "Source", &thresh_dispersao, max_thresh, thresh_callback);
-//    createTrackbar( "Janela Disp:", "Source", &janela_dispersao, max_janela_disp, thresh_callback);
+    createTrackbar( "Thresh Disp: ", "Source", &thresh_dispersao, max_thresh, thresh_callback);
+    createTrackbar( "Janela Disp:", "Source", &janela_dispersao, max_janela_disp, thresh_callback);
     //Variancia
-    createTrackbar( "Thresh Variancia:", "Source", &thresh_variancia, max_thresh, thresh_callback);
-    createTrackbar( "Janela Variancia:", "Source", &janela_variancia, max_janela_disp, thresh_callback);
+//    createTrackbar( "Thresh Variancia:", "Source", &thresh_variancia, max_thresh, thresh_callback);
+//    createTrackbar( "Janela Variancia:", "Source", &janela_variancia, max_janela_disp, thresh_callback);
     //Mediana
     createTrackbar( "Janela Mediana:", "Source", &janela_mediana, max_janela_med, thresh_callback);
     thresh_callback( 0, 0 );
@@ -69,18 +69,22 @@ void thresh_callback(int, void* )
 {
     Mat output, dispersao_show, variancia_show, mediana_show;
 
-    variancia_show = Variance(srcAux, janela_variancia, thresh_variancia);
-//    dispersao_show = Dispersion(srcAux, janela_dispersao, thresh_dispersao);
-    mediana_show = Median(variancia_show, janela_mediana);
+//    variancia_show = Variance(srcAux, janela_variancia, thresh_variancia);
+    dispersao_show = Dispersion(srcAux, janela_dispersao, thresh_dispersao);
+    mediana_show = Median(dispersao_show, janela_mediana);
 
+//    Mat kernel1 = Mat::ones(3, 3, CV_8UC1);
+//    erode(mediana_show, mediana_show, kernel1, Point(-1, -1), 10);
 //    variancia_show = Dispersao(mediana_show, janela_variancia, thresh_variancia);
 //    cout<<"ThreshDisp: "<<thresh_variancia<<" JanDisp: "<<janela_variancia<<" JanMed: "<<janela_mediana<<endl;
 
     cout<<"ThreshDisp: "<<thresh_dispersao<<" JanDisp: "<<janela_dispersao<<" JanMed: "<<janela_mediana<<endl;
-
+    bitwise_not(mediana_show, mediana_show);
     //    namedWindow( "Variancia", CV_WINDOW_AUTOSIZE ); imshow( "Variancia", variancia_show );
     namedWindow( "Variancia+Mediana", CV_WINDOW_AUTOSIZE );
     imshow( "Variancia+Mediana", mediana_show );
+
+
 
     //Watershed
     output = Watershed(mediana_show, 1);
