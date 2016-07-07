@@ -15,6 +15,6 @@ using namespace cv;
 Mat Dispersion(Mat img, int filterSize, float threshold);
 Mat Median(Mat img, unsigned int filterSize);
 Mat Variance(Mat img, int filterSize, float threshold);
-Mat Watershed(Mat imagem);
+Mat Watershed(Mat imagem, int winSize);
 
 #endif /* handler_hpp */
