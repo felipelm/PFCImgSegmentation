@@ -9,7 +9,7 @@ using namespace cv;
 using namespace std;
 
 
-Mat src, srcAux, water, waterFloat; Mat dst1;
+Mat src, srcAux, water, waterFloat, preProc; Mat dst1;
 int thresh_dispersao = 7, janela_dispersao = 4, max_janela_disp = 21;
 int thresh_variancia = 3, janela_variancia = 3, max_janela_var = 21;
 int janela_mediana=7, max_janela_med = 21;
@@ -23,8 +23,12 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata);
 /** @function main */
 int main( int argc, char** argv )
 {
-    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/lena.jpg");
+//    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/lena.jpg");
+    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/bob-esponja.jpg");
+//    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/pb.png");
+//    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/moedas2.jpg");
 //    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/piramida_preta.png");
+//    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/piramide.png");
     srcAux = src.clone();
     cvtColor(srcAux, srcAux, CV_BGR2GRAY);
     String source_window = "Source";
@@ -74,15 +78,53 @@ void thresh_callback(int, void* )
     mediana_show = Median(dispersao_show, janela_mediana);
 
 //    Mat kernel1 = Mat::ones(3, 3, CV_8UC1);
-//    erode(mediana_show, mediana_show, kernel1, Point(-1, -1), 10);
+//    erode(mediana_show, mediana_show, kernel1, Point(-1, -1), 5);
 //    variancia_show = Dispersao(mediana_show, janela_variancia, thresh_variancia);
 //    cout<<"ThreshDisp: "<<thresh_variancia<<" JanDisp: "<<janela_variancia<<" JanMed: "<<janela_mediana<<endl;
 
     cout<<"ThreshDisp: "<<thresh_dispersao<<" JanDisp: "<<janela_dispersao<<" JanMed: "<<janela_mediana<<endl;
     bitwise_not(mediana_show, mediana_show);
+
+//    // kernel pro sharpening
+//    Mat kernel = (Mat_<float>(3,3) <<
+//                  1,  1, 1,
+//                  1, -8, 1,
+//                  1,  1, 1); // aproximacao da segunda derivada
+//
+//    // aplicar sharp, laplaciano e truncar numero negativos convertendo pra 0...255 com CV_8U
+//    Mat imgLaplacian;
+//    Mat sharp = srcAux; // copy source image to another temporary one
+//    filter2D(sharp, imgLaplacian, CV_32F, kernel);
+//    srcAux.convertTo(sharp, CV_32F);
+//    Mat imgResult = sharp - imgLaplacian;
+//    // convert back to 8bits gray scale
+//    imgResult.convertTo(imgResult, CV_8UC3);
+//    imgLaplacian.convertTo(imgLaplacian, CV_8UC3);
+//
+//    imshow( "Laplaciano", imgLaplacian );
+//
+//    src = imgResult; // copy back
+//    // Imagem binaria da imagem original
+//    Mat bw=src.clone();
+//
+//
+    threshold(mediana_show, mediana_show, 40, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
+//
+//    Mat dist;
+//    distanceTransform(imgLaplacian, imgLaplacian, CV_DIST_L2, 3);
+//
+//    cin.get();
+
+
     //    namedWindow( "Variancia", CV_WINDOW_AUTOSIZE ); imshow( "Variancia", variancia_show );
-    namedWindow( "Variancia+Mediana", CV_WINDOW_AUTOSIZE );
-    imshow( "Variancia+Mediana", mediana_show );
+    namedWindow( "Preproc", CV_WINDOW_AUTOSIZE );
+    mediana_show.convertTo(preProc, CV_32FC3);
+    setMouseCallback("Preproc", CallBackFunc, NULL);
+    // Perform the distance transform algorithm
+//    Mat dist;
+//    distanceTransform(mediana_show, mediana_show, CV_DIST_L2, 3);
+
+    imshow( "Preproc", mediana_show );
 
 
 
@@ -90,9 +132,21 @@ void thresh_callback(int, void* )
     output = Watershed(mediana_show, 1);
     output.convertTo(waterFloat, CV_32FC3);
 
+//    Mat preprocAux = output.clone();
+//    for(int i=0; i< output.rows;i++){
+//        for(int j=0; j< output.cols;j++){
+//            if(!(j-1 <0)){
+//                if(output.at<uchar>(i,j) - output.at<uchar>(i,j-1) < 10 && output.at<uchar>(i,j) != 0) preprocAux.at<uchar>(i,j) = output.at<uchar>(i,j)/10+50;
+//            }
+//        }
+//    }
+
+//    preprocAux.convertTo(waterFloat, CV_32FC3);
+
     namedWindow( "Resultado", CV_WINDOW_AUTOSIZE );
     //Cria callback mouse
     setMouseCallback("Resultado", CallBackFunc, NULL);
+
     imshow( "Resultado", output );
 }
 
@@ -101,7 +155,7 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata)
     if  ( event == EVENT_LBUTTONDOWN )
     {
 
-        cout<<"CLICK X: "<< x <<" Y: "<< y << " Valor: "<< waterFloat.at<float>(x,y)<<" Orig: "<<waterFloat.at<float>(x,y)<<endl;
+        cout<<"CLICK X: "<< x <<" Y: "<< y << " Valor: "<< waterFloat.at<float>(x,y)<<" PreProc: "<<preProc.at<float>(y,x)<<endl;
     }
     else if  ( event == EVENT_RBUTTONDOWN )
     {
@@ -114,7 +168,7 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata)
     else if ( event == EVENT_MOUSEMOVE )
     {
         //        cout << "Mouse move over the window - position (" << x << ", " << y << ")" << endl;
-        cout<<"X: "<< x <<" Y: "<< y << " Valor: "<< waterFloat.at<float>(y,x)<<endl;
+        cout<<"X: "<< x <<" Y: "<< y << " Valor: "<< waterFloat.at<float>(y,x)<<" PreProc: "<<preProc.at<float>(y,x)<<endl;;
 
     }
 }
