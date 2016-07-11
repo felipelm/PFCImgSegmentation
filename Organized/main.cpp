@@ -23,11 +23,12 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata);
 /** @function main */
 int main( int argc, char** argv )
 {
-//    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/lena.jpg");
-    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/bob-esponja.jpg");
+   Mat src = imread( "lena.jpg");
+  // Mat src = imread( "testeWatershedmarkers.jpg");
+    // Mat src = imread( "bob-esponja.jpg");
 //    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/pb.png");
-//    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/moedas2.jpg");
-//    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/piramida_preta.png");
+  //  Mat src = imread( "moedas2.jpg");
+  //  Mat src = imread( "piramida_preta.png");
 //    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/piramide.png");
     srcAux = src.clone();
     cvtColor(srcAux, srcAux, CV_BGR2GRAY);
@@ -83,32 +84,32 @@ void thresh_callback(int, void* )
 //    cout<<"ThreshDisp: "<<thresh_variancia<<" JanDisp: "<<janela_variancia<<" JanMed: "<<janela_mediana<<endl;
 
     cout<<"ThreshDisp: "<<thresh_dispersao<<" JanDisp: "<<janela_dispersao<<" JanMed: "<<janela_mediana<<endl;
-    bitwise_not(mediana_show, mediana_show);
+    // bitwise_not(mediana_show, mediana_show);
 
-//    // kernel pro sharpening
-//    Mat kernel = (Mat_<float>(3,3) <<
-//                  1,  1, 1,
-//                  1, -8, 1,
-//                  1,  1, 1); // aproximacao da segunda derivada
-//
-//    // aplicar sharp, laplaciano e truncar numero negativos convertendo pra 0...255 com CV_8U
-//    Mat imgLaplacian;
-//    Mat sharp = srcAux; // copy source image to another temporary one
-//    filter2D(sharp, imgLaplacian, CV_32F, kernel);
-//    srcAux.convertTo(sharp, CV_32F);
-//    Mat imgResult = sharp - imgLaplacian;
-//    // convert back to 8bits gray scale
-//    imgResult.convertTo(imgResult, CV_8UC3);
-//    imgLaplacian.convertTo(imgLaplacian, CV_8UC3);
-//
-//    imshow( "Laplaciano", imgLaplacian );
+   // kernel pro sharpening
+   Mat kernel = (Mat_<float>(3,3) <<
+                 1,  1, 1,
+                 1, -8, 1,
+                 1,  1, 1); // aproximacao da segunda derivada
+
+   // aplicar sharp, laplaciano e truncar numero negativos convertendo pra 0...255 com CV_8U
+   Mat imgLaplacian;
+   Mat sharp = mediana_show; // copy source image to another temporary one
+   filter2D(sharp, imgLaplacian, CV_32F, kernel);
+   mediana_show.convertTo(sharp, CV_32F);
+   Mat imgResult = sharp - imgLaplacian;
+   // convert back to 8bits gray scale
+   imgResult.convertTo(imgResult, CV_8UC3);
+   imgLaplacian.convertTo(imgLaplacian, CV_8UC3);
+
+   imshow( "Laplaciano", imgLaplacian );
 //
 //    src = imgResult; // copy back
 //    // Imagem binaria da imagem original
 //    Mat bw=src.clone();
 //
 //
-    threshold(mediana_show, mediana_show, 40, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
+    threshold(imgResult, imgResult, 20, 255, CV_THRESH_OTSU);
 //
 //    Mat dist;
 //    distanceTransform(imgLaplacian, imgLaplacian, CV_DIST_L2, 3);
@@ -118,7 +119,7 @@ void thresh_callback(int, void* )
 
     //    namedWindow( "Variancia", CV_WINDOW_AUTOSIZE ); imshow( "Variancia", variancia_show );
     namedWindow( "Preproc", CV_WINDOW_AUTOSIZE );
-    mediana_show.convertTo(preProc, CV_32FC3);
+    imgResult.convertTo(preProc, CV_32FC3);
     setMouseCallback("Preproc", CallBackFunc, NULL);
     // Perform the distance transform algorithm
 //    Mat dist;

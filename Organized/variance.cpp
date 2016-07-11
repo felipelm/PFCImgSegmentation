@@ -247,6 +247,7 @@ Mat Watershed(Mat imagem, int winSize){
             }
         }
     }
+    cout<<"New label: "<<new_label<<endl;
 
     max_pixel=0;
 
