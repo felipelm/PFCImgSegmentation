@@ -23,8 +23,8 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata);
 /** @function main */
 int main( int argc, char** argv )
 {
-//    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/lena.jpg");
-    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/bob-esponja.jpg");
+    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/lena.jpg");
+//    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/bob-esponja.jpg");
 //    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/pb.png");
 //    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/moedas2.jpg");
 //    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/piramida_preta.png");
@@ -34,24 +34,6 @@ int main( int argc, char** argv )
     String source_window = "Source";
     //Mostrar Original
     namedWindow( source_window, CV_WINDOW_AUTOSIZE ); imshow( source_window, src );
-
-//    namedWindow("watershed", 2);
-//    srcAux = Variance(srcAux, 3, 10);
-//    srcAux = Median(srcAux, 10);
-//
-//
-//    water = Watershed(srcAux, 1);
-//
-//    water.convertTo(waterFloat, CV_32FC3);
-//
-//    setMouseCallback("watershed", CallBackFunc, NULL);
-//
-
-//    imshow("variancia+mediana", srcAux);
-//    imshow( "watershed", water );
-
-
-
 
     //Dispersao
     createTrackbar( "Thresh Disp: ", "Source", &thresh_dispersao, max_thresh, thresh_callback);

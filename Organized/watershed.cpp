@@ -166,6 +166,35 @@ void step3(int x, int y){
     }
 }
 
+Mat color_watershed(){
+    // Gera cores aleatorias
+    vector<Vec3b> colors;
+    for (size_t i = 0; i < max_pixel; i++)
+    {
+        int b = theRNG().uniform(10, 255);
+        int g = theRNG().uniform(10, 255);
+        int r = theRNG().uniform(10, 255);
+        colors.push_back(Vec3b((uchar)b, (uchar)g, (uchar)r));
+    }
+    // Cria imagem final
+    Mat dst = Mat::zeros(lab.size(), CV_8UC3);
+
+    // Pinta cada area de uma cor
+    for (int i = 0; i < lab.rows; i++)
+    {
+        for (int j = 0; j < lab.cols; j++)
+        {
+            int index = lab.at<int>(i,j) % (int) max_pixel;
+            if (index > 0 && index <= max_pixel)
+                dst.at<Vec3b>(i,j) = colors[index-1];
+            else
+                dst.at<Vec3b>(i,j) = Vec3b(0,0,0);
+        }
+    }
+
+    return dst;
+}
+
 Mat Watershed(Mat imagem, int winSize){
     new_label = 0.0;
     scan_step2 = 1;
@@ -174,6 +203,7 @@ Mat Watershed(Mat imagem, int winSize){
     img = imagem;
     img.convertTo(img, CV_32FC3);
     VMAX = 100000000000;
+    LMAX = 100000000000;
     //inicializar o tamanho da matriz
     lab = img.clone();
     val = img.clone();
@@ -190,6 +220,8 @@ Mat Watershed(Mat imagem, int winSize){
             step1(x, y);
         }
     }
+
+    cout<<"Step 2"<<endl;
 
     //encontrar os plateaus mesmo pixel greyscale a partir dos minimos
     while(scan_step2 == 1){
@@ -216,7 +248,12 @@ Mat Watershed(Mat imagem, int winSize){
         }
     }
 
+    int limite = 0;
+    cout<<"Step 3"<<endl;
+
     while(scan_step3 == 1){
+        limite++;
+        if(limite == 10) break;
         changed = 0;
         //scan top left >> bottom right
         for(int x = 0; x < img.rows; x++){
@@ -248,7 +285,7 @@ Mat Watershed(Mat imagem, int winSize){
             if(max_pixel < lab.at<float>(x,y)) max_pixel = lab.at<float>(x,y);
         }
     }
-
+    lab = color_watershed();
     lab.convertTo(lab, CV_8U,255.0/(max_pixel));
 
     return lab;

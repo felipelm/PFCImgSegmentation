@@ -92,8 +92,7 @@ void step2(int x, int y){
         }
         //novo valor do pixel baseado nos minimos vizinhos
         if(min != VMAX &&
-           val.at<float>(x,y) != min + 1){
-
+           val.at<float>(x,y) != min + 1){        
             val.at<float>(x,y) = min+1.0;
             if(min+1.0 > LMAX) LMAX = min+1.0;
             changed = 1;
@@ -205,11 +204,40 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata)
     }
 }
 
+Mat color_watershed(){
+    // Gera cores aleatorias
+    vector<Vec3b> colors;
+    for (size_t i = 0; i < max_pixel; i++)
+    {
+        int b = theRNG().uniform(10, 255);
+        int g = theRNG().uniform(10, 255);
+        int r = theRNG().uniform(10, 255);
+        colors.push_back(Vec3b((uchar)b, (uchar)g, (uchar)r));
+    }
+    // Cria imagem final
+    Mat dst = Mat::zeros(lab.size(), CV_8UC3);
+
+    // Pinta cada area de uma cor
+    for (int i = 0; i < lab.rows; i++)
+    {
+        for (int j = 0; j < lab.cols; j++)
+        {
+            int index = lab.at<int>(i,j) % (int) max_pixel;
+            if (index > 0 && index <= max_pixel)
+                dst.at<Vec3b>(i,j) = colors[index-1];
+            else
+                dst.at<Vec3b>(i,j) = Vec3b(0,0,0);
+        }
+    }
+    return dst;
+}
+
 int main(){
     Mat original = img.clone();
     img.convertTo(img, CV_32FC3);
     imgFloat = img.clone();
     VMAX = 100000000000;
+    LMAX = 100000000000;
     //inicializar o tamanho da matriz
     lab = img.clone();
     val = img.clone();
@@ -299,6 +327,8 @@ int main(){
 
 
     labV = lab.clone();
+
+    Mat color = color_watershed();
     //Cria janela
     namedWindow("original", 1);
     namedWindow("watershed", 2);
@@ -307,14 +337,13 @@ int main(){
     setMouseCallback("original", CallBackFunc, NULL);
     setMouseCallback("watershed", CallBackFunc, NULL);
 
-
     lab.convertTo(lab, CV_8U,255.0/(max_pixel));
     img.convertTo(img, CV_8U);
     //Mostra imagem
-    imshow("original", original);
-
+//    imshow("original", original);
+    imshow("color", color);
     //    waitKey(0);
     //    imshow("erode", img);
-    imshow("watershed", lab);
+//    imshow("watershed", lab);
     waitKey(0);
 }
