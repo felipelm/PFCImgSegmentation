@@ -50,10 +50,10 @@ public:
     }
 
     void print(){
-        for(map<uchar, Region>::iterator it = neighbor.begin();
-            it != neighbor.end(); ++it)
+        for(map<uchar, int>::iterator it = neighbor.begin();
+            it != neighbor.end(); it++)
         {
-            std::cout << it->first << " " << it->second.first << " " << it->second.second << "\n";
+            std::cout << it->first << " " << it->second;
         }
     }
 };
@@ -83,16 +83,21 @@ void mergeRegion(Mat labImg, int threshold){
                     }
                 }
             }
-
         }
     }
+    int cnt = 0;
+    for(map<uchar, Region>::iterator it = regions.begin();
+        it != regions.end(); it++)
+        cnt++;
+      cout<<"cnt: "<<cnt<<endl;
+
 }
 
 /** @function main */
 int main( int argc, char** argv )
 {
     /// Load source image and convert it to gray
-    src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/watershedGreyscale.png", 1 );
+    src = imread( "watershedGreyscale.png", 1 );
 
     /// Convert image to gray and blur it
     cvtColor( src, src_gray, CV_BGR2GRAY );
