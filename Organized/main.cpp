@@ -10,9 +10,12 @@ using namespace std;
 
 
 Mat src, srcAux, water, waterFloat, preProc; Mat dst1;
-int thresh_dispersao = 7, janela_dispersao = 4, max_janela_disp = 21;
+int thresh_dispersao = 7, janela_dispersao = 7, max_janela_disp = 15;
 int thresh_variancia = 3, janela_variancia = 3, max_janela_var = 21;
 int janela_mediana=7, max_janela_med = 21;
+int thresh_merge = 60, max_merge = 12000;
+int num_merge = 1, max_num_merge = 10;
+
 
 int max_thresh = 255;
 RNG rng(12345);
@@ -27,14 +30,22 @@ int main( int argc, char** argv )
 //    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/bob-esponja.jpg");
 //    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/pb.png");
 //    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/moedas2.jpg");
-//    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/piramida_preta.png");
+//    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/pb3.png");
+//    Mat src = imread( "/Users/felipemachado/Documents/OpenCV/openCV DragLena/openCV NEW PROJECT/woodbath.png");
 //    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/piramide.png");
+//    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/piramida_preta.png");
+//    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/LAB_IR_2009.jpg");
+//    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/Cosine_wave4.png");
+
     srcAux = src.clone();
     cvtColor(srcAux, srcAux, CV_BGR2GRAY);
     String source_window = "Source";
     //Mostrar Original
     namedWindow( source_window, CV_WINDOW_AUTOSIZE ); imshow( source_window, src );
 
+    //Merge
+    createTrackbar( "Thresh Merge: ", "Source", &thresh_merge, max_merge, thresh_callback);
+    createTrackbar( "Num Merge: ", "Source", &num_merge, max_num_merge, thresh_callback);
     //Dispersao
     createTrackbar( "Thresh Disp: ", "Source", &thresh_dispersao, max_thresh, thresh_callback);
     createTrackbar( "Janela Disp:", "Source", &janela_dispersao, max_janela_disp, thresh_callback);
@@ -44,6 +55,7 @@ int main( int argc, char** argv )
     //Mediana
     createTrackbar( "Janela Mediana:", "Source", &janela_mediana, max_janela_med, thresh_callback);
     thresh_callback( 0, 0 );
+
 
 
     waitKey(0);
@@ -99,9 +111,9 @@ void thresh_callback(int, void* )
 
 
     //    namedWindow( "Variancia", CV_WINDOW_AUTOSIZE ); imshow( "Variancia", variancia_show );
-    namedWindow( "Preproc", CV_WINDOW_AUTOSIZE );
+//    namedWindow( "Preproc", CV_WINDOW_AUTOSIZE );
     mediana_show.convertTo(preProc, CV_32FC3);
-    setMouseCallback("Preproc", CallBackFunc, NULL);
+//    setMouseCallback("Preproc", CallBackFunc, NULL);
     // Perform the distance transform algorithm
 //    Mat dist;
 //    distanceTransform(mediana_show, mediana_show, CV_DIST_L2, 3);
@@ -112,7 +124,10 @@ void thresh_callback(int, void* )
 
     //Watershed
     output = Watershed(mediana_show, 1);
+    Mat aux =output.clone();
+    for(int i=0;i<num_merge; i++) output = mergeRegion(output, thresh_merge, dispersao_show);
     output.convertTo(waterFloat, CV_32FC3);
+    cout<<aux - output;
 
 //    Mat preprocAux = output.clone();
 //    for(int i=0; i< output.rows;i++){
@@ -129,7 +144,14 @@ void thresh_callback(int, void* )
     //Cria callback mouse
     setMouseCallback("Resultado", CallBackFunc, NULL);
 
+//    threshold(srcAux, srcAux, 40, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
+
+//    output = Watershed(srcAux, 1);
+//    output.convertTo(waterFloat, CV_32FC3);
+
+
     imshow( "Resultado", output );
+//    imwrite("/Users/felipemachado/Documents/OpenCV/watershedGreyscale.png",output);
 }
 
 void CallBackFunc(int event, int x, int y, int flags, void* userdata)
@@ -137,7 +159,7 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata)
     if  ( event == EVENT_LBUTTONDOWN )
     {
 
-        cout<<"CLICK X: "<< x <<" Y: "<< y << " Valor: "<< waterFloat.at<float>(x,y)<<" PreProc: "<<preProc.at<float>(y,x)<<endl;
+        cout<<"CLICK X: "<< x <<" Y: "<< y << " Valor: "<< waterFloat.at<float>(y,x)<<" PreProc: "<<preProc.at<float>(y,x)<<endl;
     }
     else if  ( event == EVENT_RBUTTONDOWN )
     {

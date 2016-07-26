@@ -31,14 +31,14 @@ Mat Dispersion(Mat img, int filterSize, float threshold){
                 for(int j=0; j<filterSize; j++){
                     element = (float)img.at<uchar>(y - filterSize/2 + j ,x - filterSize/2 + i);
                     sum +=abs(element-mean)/(filterSize*filterSize);
-                    
+
                 }
             }
-            
+
             dispersion = sum;
             if(dispersion>threshold)    dispersionImage.at<uchar>(y,x) = dispersion;
             else dispersionImage.at<uchar>(y,x) = 255;
-            
+
         }
     }
     return dispersionImage;
