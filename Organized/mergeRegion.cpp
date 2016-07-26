@@ -74,7 +74,7 @@ public:
         for(map<uchar, int>::iterator it = neighbor.begin();
             it != neighbor.end(); it++)
         {
-            std::cout << it->first << " " << it->second;
+            // std::cout << it->first << " " << it->second;
         }
     }
 };
@@ -143,7 +143,9 @@ Mat mergeRegion(Mat labImg, int threshold, Mat dispersion){
                        !(i == 0 && j == 0) &&
                        (labImg.at<uchar>(y+j,x+i) > (uchar) 15)){
                         //add vizinho
-                        regions[labImg.at<uchar>(y,x)].addNeighbor(labImg.at<uchar>(y+j,x+i));
+                        if(labImg.at<uchar>(y,x) != labImg.at<uchar>(y+j,x+i)) {
+                          regions[labImg.at<uchar>(y,x)].addNeighbor(labImg.at<uchar>(y+j,x+i));
+                        }
                     }
                 }
             }
@@ -153,12 +155,16 @@ Mat mergeRegion(Mat labImg, int threshold, Mat dispersion){
     int cnt = 0, merges=0;
     for(map<uchar, Region>::iterator it = regions.begin();
         it != regions.end(); it++){
-        cout<<(it->first)<<" "<<(it->second).getNumOfPixels()<<endl;
+        // cout<<(it->first)<<" "<<(it->second).getNumOfPixels()<<endl;
         cnt++;
         uchar mergeRegion = getMergeNeighbor((it->second));
+        cout<< (int)(it->first)<<" "<<(int)mergeRegion<<endl;
         if((it->second).getNumOfPixels() < threshold){
             merges++;
-            aux = merge(aux, (it->first), mergeRegion);
+            if(it->first > mergeRegion) {
+              cout<<"aux"<<endl;
+              aux = merge(aux, (it->first), mergeRegion);
+            }
         }
     }
     cout<<merges<<endl;
