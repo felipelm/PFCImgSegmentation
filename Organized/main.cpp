@@ -10,32 +10,36 @@ using namespace std;
 
 
 Mat src, srcAux, water, waterFloat, preProc; Mat dst1;
-int thresh_dispersao = 7, janela_dispersao = 7, max_janela_disp = 15;
-int thresh_variancia = 3, janela_variancia = 3, max_janela_var = 21;
-int janela_mediana=7, max_janela_med = 21;
-int thresh_merge = 60, max_merge = 12000;
-int num_merge = 1, max_num_merge = 10;
+int thresh_dispersao = 6, janela_dispersao = 7, max_janela_disp = 15;
+int thresh_variancia = 5, janela_variancia = 3, max_janela_var = 21;
+int janela_mediana=8, max_janela_med = 21;
+int thresh_merge = 12000, max_merge = 17000;
+int num_merge = 1, max_num_merge = 15;
 
 
-int max_thresh = 255;
+int max_thresh = 40;
 RNG rng(12345);
 
 void thresh_callback(int, void* );
 void CallBackFunc(int event, int x, int y, int flags, void* userdata);
+Mat color_watershed(Mat color);
 
 /** @function main */
 int main( int argc, char** argv )
 {
-    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/lena.jpg");
-//    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/bob-esponja.jpg");
-//    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/pb.png");
-//    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/moedas2.jpg");
-//    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/pb3.png");
-//    Mat src = imread( "/Users/felipemachado/Documents/OpenCV/openCV DragLena/openCV NEW PROJECT/woodbath.png");
-//    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/piramide.png");
-//    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/piramida_preta.png");
-//    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/LAB_IR_2009.jpg");
-//    Mat src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/Cosine_wave4.png");
+    src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/lena.jpg");
+//  src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/bob-esponja.jpg");
+//  src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/pb.png");
+//  src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/moedas2.jpg");
+//  src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/pb3.png");
+//  src = imread( "/Users/felipemachado/Documents/OpenCV/openCV DragLena/openCV NEW PROJECT/woodbath.png");
+//  src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/piramide.png");
+//  src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/piramida_preta.png");
+//  src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFCa/LAB_IR_2009.jpg");
+//  src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/banana1.bmp");
+//  src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/BRICK.jpg");
+//  src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/CAMOUFLAGE_IR_1880.jpg");
+//  src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/Cosine_wave4.png");
 
     srcAux = src.clone();
     cvtColor(srcAux, srcAux, CV_BGR2GRAY);
@@ -71,86 +75,36 @@ void thresh_callback(int, void* )
     dispersao_show = Dispersion(srcAux, janela_dispersao, thresh_dispersao);
     mediana_show = Median(dispersao_show, janela_mediana);
 
-//    Mat kernel1 = Mat::ones(3, 3, CV_8UC1);
-//    erode(mediana_show, mediana_show, kernel1, Point(-1, -1), 5);
-//    variancia_show = Dispersao(mediana_show, janela_variancia, thresh_variancia);
-//    cout<<"ThreshDisp: "<<thresh_variancia<<" JanDisp: "<<janela_variancia<<" JanMed: "<<janela_mediana<<endl;
-
     cout<<"ThreshDisp: "<<thresh_dispersao<<" JanDisp: "<<janela_dispersao<<" JanMed: "<<janela_mediana<<endl;
-    bitwise_not(mediana_show, mediana_show);
-
-//    // kernel pro sharpening
-//    Mat kernel = (Mat_<float>(3,3) <<
-//                  1,  1, 1,
-//                  1, -8, 1,
-//                  1,  1, 1); // aproximacao da segunda derivada
-//
-//    // aplicar sharp, laplaciano e truncar numero negativos convertendo pra 0...255 com CV_8U
-//    Mat imgLaplacian;
-//    Mat sharp = srcAux; // copy source image to another temporary one
-//    filter2D(sharp, imgLaplacian, CV_32F, kernel);
-//    srcAux.convertTo(sharp, CV_32F);
-//    Mat imgResult = sharp - imgLaplacian;
-//    // convert back to 8bits gray scale
-//    imgResult.convertTo(imgResult, CV_8UC3);
-//    imgLaplacian.convertTo(imgLaplacian, CV_8UC3);
-//
-//    imshow( "Laplaciano", imgLaplacian );
-//
-//    src = imgResult; // copy back
-//    // Imagem binaria da imagem original
-//    Mat bw=src.clone();
-//
-//
-    threshold(mediana_show, mediana_show, 40, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
-//
-//    Mat dist;
-//    distanceTransform(imgLaplacian, imgLaplacian, CV_DIST_L2, 3);
-//
-//    cin.get();
 
 
-    //    namedWindow( "Variancia", CV_WINDOW_AUTOSIZE ); imshow( "Variancia", variancia_show );
-//    namedWindow( "Preproc", CV_WINDOW_AUTOSIZE );
     mediana_show.convertTo(preProc, CV_32FC3);
-//    setMouseCallback("Preproc", CallBackFunc, NULL);
-    // Perform the distance transform algorithm
-//    Mat dist;
-//    distanceTransform(mediana_show, mediana_show, CV_DIST_L2, 3);
+
 
     imshow( "Preproc", mediana_show );
 
-
+    //WatershedOpencv
+    output = watershedOpencv(src, srcAux);
 
     //Watershed
-    output = Watershed(mediana_show, 1);
-    Mat aux =output.clone();
-    for(int i=0;i<num_merge; i++) output = mergeRegion(output, thresh_merge, dispersao_show);
-    output.convertTo(waterFloat, CV_32FC3);
-    cout<<aux - output;
+//    output = Watershed(mediana_show, 1);
 
-//    Mat preprocAux = output.clone();
-//    for(int i=0; i< output.rows;i++){
-//        for(int j=0; j< output.cols;j++){
-//            if(!(j-1 <0)){
-//                if(output.at<uchar>(i,j) - output.at<uchar>(i,j-1) < 10 && output.at<uchar>(i,j) != 0) preprocAux.at<uchar>(i,j) = output.at<uchar>(i,j)/10+50;
-//            }
-//        }
-//    }
+    //Pos-processamento
+//    Mat aux =output.clone();
+//    for(int i=0;i<num_merge; i++) output = mergeRegion(output, thresh_merge, dispersao_show);
+//    output.convertTo(waterFloat, CV_32FC3);
 
-//    preprocAux.convertTo(waterFloat, CV_32FC3);
+    //Colorir
+//    output = color_watershed(output);
 
     namedWindow( "Resultado", CV_WINDOW_AUTOSIZE );
     //Cria callback mouse
     setMouseCallback("Resultado", CallBackFunc, NULL);
 
-//    threshold(srcAux, srcAux, 40, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
-
-//    output = Watershed(srcAux, 1);
-//    output.convertTo(waterFloat, CV_32FC3);
-
 
     imshow( "Resultado", output );
+
+    //Salvar imagem
 //    imwrite("/Users/felipemachado/Documents/OpenCV/watershedGreyscale.png",output);
 }
 
@@ -161,18 +115,41 @@ void CallBackFunc(int event, int x, int y, int flags, void* userdata)
 
         cout<<"CLICK X: "<< x <<" Y: "<< y << " Valor: "<< waterFloat.at<float>(y,x)<<" PreProc: "<<preProc.at<float>(y,x)<<endl;
     }
-    else if  ( event == EVENT_RBUTTONDOWN )
-    {
-        //        cout << "Right button of the mouse is clicked - position (" << x << ", " << y << ")" << endl;
-    }
-    else if  ( event == EVENT_MBUTTONDOWN )
-    {
-        //        cout << "Middle button of the mouse is clicked - position (" << x << ", " << y << ")" << endl;
-    }
     else if ( event == EVENT_MOUSEMOVE )
     {
         //        cout << "Mouse move over the window - position (" << x << ", " << y << ")" << endl;
-        cout<<"X: "<< x <<" Y: "<< y << " Valor: "<< waterFloat.at<float>(y,x)<<" PreProc: "<<preProc.at<float>(y,x)<<endl;;
+//        cout<<"X: "<< x <<" Y: "<< y << " Valor: "<< waterFloat.at<float>(y,x)<<" PreProc: "<<preProc.at<float>(y,x)<<endl;;
 
     }
+}
+
+
+Mat color_watershed(Mat color){
+    // Gera cores aleatorias
+    vector<Vec3b> colors;
+    for (size_t i = 0; i < 255; i++)
+    {
+        int b = theRNG().uniform(10, 255);
+        int g = theRNG().uniform(10, 255);
+        int r = theRNG().uniform(10, 255);
+        colors.push_back(Vec3b((uchar)b, (uchar)g, (uchar)r));
+    }
+    // Cria imagem final
+    Mat dst = Mat::zeros(color.size(), CV_8UC3);
+
+    // Pinta cada area de uma cor
+    for (int i = 0; i < color.rows; i++)
+    {
+        for (int j = 0; j < color.cols; j++)
+        {
+            color.convertTo(color, CV_32F);
+            int index = color.at<int>(i,j) % (int) 255;
+            if (index > 0 && index <= 255){
+                dst.at<Vec3b>(i,j) = colors[index-1];
+            }
+            else
+                dst.at<Vec3b>(i,j) = Vec3b(0,0,0);
+        }
+    }
+    return dst;
 }

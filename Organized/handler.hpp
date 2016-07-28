@@ -17,5 +17,6 @@ Mat Median(Mat img, unsigned int filterSize);
 Mat Variance(Mat img, int filterSize, float threshold);
 Mat Watershed(Mat imagem, int winSize);
 Mat mergeRegion(Mat labImg, int threshold, Mat dispersion);
+Mat watershedOpencv(Mat src, Mat srcAux);
 
 #endif /* handler_hpp */

@@ -151,7 +151,7 @@ void step3(int x, int y){
                        !(y+j > img.cols-1) &&
                        //nao pegar o pixel no meio
                        !(i == 0 && j == 0)){
-                        if(cmpf(img.at<float>(x+i,y+j), img.at<float>(x,y)) && cmpf(val.at<float>(x+i,y+j), (val.at<float>(x,y) -1.0)) && lab.at<float>(y+j, x+i)>0 && lab.at<float>(x+i,y+j) < lmin){
+                        if(cmpf(img.at<float>(x+i,y+j), img.at<float>(x,y)) && cmpf(val.at<float>(x+i,y+j), (val.at<float>(x,y) -1.0)) && lab.at<float>(x+i, y+j)>0 && lab.at<float>(x+i,y+j) < lmin){
                             lmin = lab.at<float>(x+i,y+j);
                         }
                     }
@@ -196,6 +196,9 @@ Mat color_watershed(){
 }
 
 Mat Watershed(Mat imagem, int winSize){
+    bitwise_not(imagem, imagem);
+    threshold(imagem, imagem, 40, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
+
     new_label = 0.0;
     scan_step2 = 1;
     scan_step3 = 1;
@@ -285,7 +288,7 @@ Mat Watershed(Mat imagem, int winSize){
             if(max_pixel < lab.at<float>(x,y)) max_pixel = lab.at<float>(x,y);
         }
     }
-    lab = color_watershed();
+//    lab = color_watershed();
     lab.convertTo(lab, CV_8U,255.0/(max_pixel));
 
     return lab;
