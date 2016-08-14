@@ -3,12 +3,31 @@
 <head>
   <title>OpencvInterface</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <link href='https://fonts.googleapis.com/css?family=Roboto:400,100italic,100,300,300italic' rel='stylesheet' type='text/css'>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
-<body>
+<body id="page-top" class="index">
+<div class="wrapper">
 
-<%= yield %>
+  <div class="content-wrapper">
+    <% if alert %>
+        <div class="alert alert-danger" role="alert"><%= alert %></div>
+    <% end %>
+    <% if notice %>
+        <div class="alert alert-success" role="alert"><%= notice %></div>
+    <% end %>
+
+    <section class="content">
+      <%= render 'layouts/nav' %>
+      <%= yield %>
+      <%= render 'layouts/footer' %>
+
+    </section>
+  </div>
+
+</div>
+
 
 </body>
 </html>
