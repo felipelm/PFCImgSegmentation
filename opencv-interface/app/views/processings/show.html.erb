@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Image:</strong>
+  <%= @processing.image %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @processing.user %>
+</p>
+
+<%= link_to 'Edit', edit_processing_path(@processing) %> |
+<%= link_to 'Back', processings_path %>

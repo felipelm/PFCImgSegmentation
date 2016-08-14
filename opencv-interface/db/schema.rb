@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160419011236) do
+ActiveRecord::Schema.define(version: 20160813231419) do
 
   create_table "images", force: :cascade do |t|
     t.string   "image_path"
@@ -19,6 +19,16 @@ ActiveRecord::Schema.define(version: 20160419011236) do
     t.datetime "updated_at", null: false
     t.string   "image"
   end
+
+  create_table "processings", force: :cascade do |t|
+    t.integer  "image_id"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "processings", ["image_id"], name: "index_processings_on_image_id"
+  add_index "processings", ["user_id"], name: "index_processings_on_user_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
