@@ -11,7 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160813231419) do
+ActiveRecord::Schema.define(version: 20160816190054) do
+
+  create_table "commands", force: :cascade do |t|
+    t.string   "cmd"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "images", force: :cascade do |t|
     t.string   "image_path"
