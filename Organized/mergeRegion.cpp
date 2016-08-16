@@ -144,7 +144,7 @@ Mat mergeRegion(Mat labImg, int threshold, Mat dispersion){
                        (labImg.at<uchar>(y+j,x+i) > (uchar) 15)){
                         //add vizinho
                         if(labImg.at<uchar>(y,x) != labImg.at<uchar>(y+j,x+i)) {
-                          regions[labImg.at<uchar>(y,x)].addNeighbor(labImg.at<uchar>(y+j,x+i));
+                            regions[labImg.at<uchar>(y,x)].addNeighbor(labImg.at<uchar>(y+j,x+i));
                         }
                     }
                 }
@@ -155,19 +155,16 @@ Mat mergeRegion(Mat labImg, int threshold, Mat dispersion){
     int cnt = 0, merges=0;
     for(map<uchar, Region>::iterator it = regions.begin();
         it != regions.end(); it++){
-        // cout<<(it->first)<<" "<<(it->second).getNumOfPixels()<<endl;
         cnt++;
         uchar mergeRegion = getMergeNeighbor((it->second));
-        cout<< (int)(it->first)<<" "<<(int)mergeRegion<<endl;
         if((it->second).getNumOfPixels() < threshold){
             merges++;
             if(it->first > mergeRegion) {
-              cout<<"aux"<<endl;
-              aux = merge(aux, (it->first), mergeRegion);
+                aux = merge(aux, (it->first), mergeRegion);
             }
         }
     }
-    cout<<merges<<endl;
+//    cout<<merges<<endl;
     regions.clear();
     return aux;
 

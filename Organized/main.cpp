@@ -27,7 +27,8 @@ Mat color_watershed(Mat color);
 /** @function main */
 int main( int argc, char** argv )
 {
-    src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/lena.jpg");
+//    src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/lena.jpg");
+//    src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/lenaLessNoise.png");
 //  src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/bob-esponja.jpg");
 //  src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/pb.png");
 //  src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/moedas2.jpg");
@@ -38,9 +39,10 @@ int main( int argc, char** argv )
 //  src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFCa/LAB_IR_2009.jpg");
 //  src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/banana1.bmp");
 //  src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/BRICK.jpg");
-//  src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/CAMOUFLAGE_IR_1880.jpg");
+  src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/CAMOUFLAGE_IR_1880.jpg");
 //  src = imread( "/Users/felipemachado/Dropbox/Estudo/PFC/imagensPFC/Cosine_wave4.png");
 
+//    srcAux = src.clone();
     srcAux = src.clone();
     cvtColor(srcAux, srcAux, CV_BGR2GRAY);
     String source_window = "Source";
@@ -77,30 +79,28 @@ void thresh_callback(int, void* )
 
     cout<<"ThreshDisp: "<<thresh_dispersao<<" JanDisp: "<<janela_dispersao<<" JanMed: "<<janela_mediana<<endl;
 
-
     mediana_show.convertTo(preProc, CV_32FC3);
 
 
     imshow( "Preproc", mediana_show );
 
     //WatershedOpencv
-    output = watershedOpencv(src, srcAux);
+//    output = watershedOpencv(src, srcAux);
 
     //Watershed
-//    output = Watershed(mediana_show, 1);
+    output = Watershed(mediana_show, 1);
 
     //Pos-processamento
-//    Mat aux =output.clone();
-//    for(int i=0;i<num_merge; i++) output = mergeRegion(output, thresh_merge, dispersao_show);
-//    output.convertTo(waterFloat, CV_32FC3);
+    Mat aux =output.clone();
+    for(int i=0;i<num_merge; i++) output = mergeRegion(output, thresh_merge, dispersao_show);
+    output.convertTo(waterFloat, CV_32FC3);
 
     //Colorir
-//    output = color_watershed(output);
+    output = color_watershed(output);
 
     namedWindow( "Resultado", CV_WINDOW_AUTOSIZE );
     //Cria callback mouse
     setMouseCallback("Resultado", CallBackFunc, NULL);
-
 
     imshow( "Resultado", output );
 
