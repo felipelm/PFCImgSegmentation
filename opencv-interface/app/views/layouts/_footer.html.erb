@@ -2,53 +2,57 @@
 <!-- Navigation -->
 <nav id="mainNav" class="navbar navbar-default navbar-custom navbar-fixed-bottom affix">
     <div class="container" style="text-align: center;">
-      <div class="btn-group dropup">
-        <button type="button" class="btn btn-default">Pre-Processamento</button>
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span class="caret"></span>
-          <span class="sr-only">Toggle Dropdown</span>
+      <div class="btn dropup">
+        <button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pre-Processamento</button>
         </button>
-        <ul class="dropdown-menu" id="myDropdown">
-          <li><a href="#" style="float:right;"><input id="exDisp-enabled" type="checkbox"/> Avitado</a></li>
-          <span>Dispersão</span>
-          <p>Janela:</p> <input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
-          <p>Threshold:</p> <input id="ex2" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
-          <li role="separator" class="divider"></li>
-          <li><a href="#" style="float:right;"><input id="exVar-enabled" type="checkbox"/> Avitado</a></li>
-          <span>Variância</span>
-          <p>Janela:</p><input id="ex3" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
-          <p>Threshold:</p><input id="ex4" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
-          <li role="separator" class="divider"></li>
-          <li><a href="#" style="float:right;"><input id="exMed-enabled" type="checkbox"/> Avitado</a></li>
-          <span>Mediana</span>
-          <p>Janela:</p><input id="ex5" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
+        <ul class="dropdown-menu" id="dispDD">
+          <div class="btn" data-toggle="buttons">
+            <label class="btn btn-primary active">
+              <input id="exDisp-enabled" type="radio" autocomplete="off"> Dispersão
+            </label>
+
+            <input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
+            <input id="ex2" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
+            <li role="separator" class="divider"></li>
+            <label class="btn btn-primary active">
+              <input id="exVar-enabled" type="radio" autocomplete="off"> Variância
+            </label>
+            <input id="ex3" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
+            <input id="ex4" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
+            <li role="separator" class="divider"></li>
+            <label class="btn btn-primary active">
+              <input id="exMed-enabled" type="checkbox" autocomplete="off"> Mediana
+            </label>
+            <input id="ex5" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
+          </div>
         </ul>
       </div>
-      <div class="btn-group dropup">
-        <button type="button" class="btn btn-default">Watershed</button>
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span class="caret"></span>
-          <span class="sr-only">Toggle Dropdown</span>
+      <div class="btn dropup">
+        <button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Watershed</button>
         </button>
         <ul class="dropdown-menu">
-          <li><a href="#">Watershed IME</a></li>
-          <input type="checkbox" aria-label="...">
-          <input id="ex8" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14"/>
-          <li><a href="#">Watershed OpenCV</a></li>
-          <input type="checkbox" aria-label="...">
+          <div class="btn" data-toggle="buttons">
+            <label class="btn btn-primary active">
+              <input id="watershedIME-enabled" type="radio" autocomplete="off"> Watershed IME
+            </label>
+            <input id="ex8" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
+            <label class="btn btn-primary active">
+              <input id="watershedOpencv-enabled" type="radio" autocomplete="off"> Watershed OpenCV
+            </label>
+          </div>
         </ul>
       </div>
-      <div class="btn-group dropup">
-        <button type="button" class="btn btn-default">Pos-Processamento</button>
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span class="caret"></span>
-          <span class="sr-only">Toggle Dropdown</span>
+      <div class="btn dropup">
+        <button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pos-Processamento</button>
         </button>
         <ul class="dropdown-menu">
-          <li><a href="#" style="float:right;"><input id="exMerge-enabled" type="checkbox"/> Avitado</a></li>
-          <span>Region Merge</span>
-          <p>Janela:</p> <input id="ex6" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
-          <p>Threshold:</p> <input id="ex7" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
+          <div class="btn" data-toggle="buttons">
+            <label class="btn btn-primary active">
+              <input id="exMerge-enabled" type="checkbox" autocomplete="off"> Region Merge
+            </label>
+            <input id="ex6" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
+            <input id="ex7" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
+          </div>
         </ul>
       </div>
       <button type="button" class="btn btn-info">Aplicar</button>
@@ -66,17 +70,9 @@
       // With JQuery
       $("#ex1").slider("enable");
       $("#ex2").slider("enable");
+      $("#ex3").slider("disable");
+      $("#ex4").slider("disable");
 
-      // Without JQuery
-      slider.enable();
-    }
-    else {
-      // With JQuery
-      $("#ex1").slider("disable");
-      $("#ex2").slider("disable");
-
-      // Without JQuery
-      slider.disable();
     }
   });
 
@@ -85,17 +81,23 @@
       // With JQuery
       $("#ex3").slider("enable");
       $("#ex4").slider("enable");
+      $("#ex1").slider("disable");
+      $("#ex2").slider("disable");
 
-      // Without JQuery
-      slider.enable();
     }
-    else {
-      // With JQuery
-      $("#ex3").slider("disable");
-      $("#ex4").slider("disable");
+  });
 
-      // Without JQuery
-      slider.disable();
+  $("#watershedIME-enabled").click(function() {
+    if(this.checked) {
+      // With JQuery
+      $("#ex8").slider("enable");
+    }
+  });
+
+  $("#watershedOpencv-enabled").click(function() {
+    if(this.checked) {
+      // With JQuery
+      $("#ex8").slider("disable");
     }
   });
 
@@ -103,16 +105,10 @@
     if(this.checked) {
       // With JQuery
       $("#ex5").slider("enable");
-
-      // Without JQuery
-      slider.enable();
     }
     else {
       // With JQuery
       $("#ex5").slider("disable");
-
-      // Without JQuery
-      slider.disable();
     }
   });
 
@@ -121,65 +117,59 @@
       // With JQuery
       $("#ex6").slider("enable");
       $("#ex7").slider("enable");
-
-      // Without JQuery
-      slider.enable();
     }
     else {
       // With JQuery
       $("#ex6").slider("disable");
       $("#ex7").slider("disable");
-
-      // Without JQuery
-      slider.disable();
     }
   });
 
   $('#ex1').slider({
     formatter: function(value) {
-      return 'Valor Atual: ' + value;
+      return 'Janela Atual: ' + value;
     }
   });
 
   $('#ex2').slider({
     formatter: function(value) {
-      return 'Valor Atual: ' + value;
+      return 'Threshold Atual: ' + value;
     }
   });
 
   $('#ex3').slider({
     formatter: function(value) {
-      return 'Valor Atual: ' + value;
+      return 'Janela Atual: ' + value;
     }
   });
 
   $('#ex4').slider({
     formatter: function(value) {
-      return 'Valor Atual: ' + value;
+      return 'Threshold Atual: ' + value;
     }
   });
 
   $('#ex5').slider({
     formatter: function(value) {
-      return 'Valor Atual: ' + value;
+      return 'Janela Atual: ' + value;
     }
   });
 
   $('#ex6').slider({
     formatter: function(value) {
-      return 'Valor Atual: ' + value;
+      return 'Janela Atual: ' + value;
     }
   });
 
   $('#ex7').slider({
     formatter: function(value) {
-      return 'Valor Atual: ' + value;
+      return 'Threshold Atual: ' + value;
     }
   });
 
   $('#ex8').slider({
     formatter: function(value) {
-      return 'Valor Atual: ' + value;
+      return 'Janela Atual: ' + value;
     }
   });
 
@@ -187,4 +177,7 @@
     e.stopPropagation();
   });
 
+  // $('#dispDD').hover(function(){
+  //   $('#dispDD').dropdown('toggle')
+  // });
 </script>

@@ -30,3 +30,12 @@ section{
 .dropdown-menu{
   padding: 5px 25px;
 }
+
+.dropdown:hover {
+    display: block;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0; // remove the gap so it doesn't close
+ }
