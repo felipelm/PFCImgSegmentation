@@ -1,5 +1,3 @@
-<p id="notice"><%= notice %></p>
-
 <%= image_tag @image.image_url.to_s, style: "max-width: 30%;"%>
 
 <%= image_tag @new_path %>
@@ -9,7 +7,40 @@
   <%= @image.image_path %>
 </p>
 
+<%= link_to 'Processamento', processings_path %> |
 <%= link_to 'Edit', edit_image_path(@image) %> |
 <%= link_to 'Back', images_path %>
 
 <%= render 'layouts/footer' %>
+
+<script type="text/javascript">
+  $( document ).ready(function() {
+
+    var success = function( data ) {
+
+    };
+
+    var ajax_process_image = function(data1) {
+      $.ajax({
+        url: "process",
+        data: {
+          data1: data1
+        },
+        dataType: 'json',
+        type: 'GET',
+        crossDomain: true
+      }).success(success)
+      .error(function(xhr, status, error) {
+        console.log(error);
+        console.log(xhr);
+      });
+    };
+
+    var load_filters = function() {
+      var data1 = $('#ex1');
+      ajax_process_image(data1);
+    }
+
+    $('#apply').on('click', load_filters);
+  });
+</script>
