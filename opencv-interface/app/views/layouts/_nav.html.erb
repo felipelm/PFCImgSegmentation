@@ -6,14 +6,14 @@
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                 <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
             </button>
-            <a class="navbar-brand page-scroll" href="#page-top">PFC Segmentação de Imagens</a>
+            <%= link_to "PFC Segmentação de Imagens", root_path, class: "navbar-brand"  %>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
-                <li class="hidden">
-                    <a href="#page-top"></a>
+                <li>
+                  <%= link_to "Imagens", images_path	  %>
                 </li>
                 <li>
                   <%= link_to "Logout", destroy_user_session_path, method: :delete	  %>

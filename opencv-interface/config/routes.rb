@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   end
 
   authenticated :user do
-    root 'images#index'
+    root 'images#home'
   end
 
   unauthenticated :user do
