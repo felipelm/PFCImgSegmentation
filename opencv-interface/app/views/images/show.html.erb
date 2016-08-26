@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
 
-<%= image_tag @image.image_url.to_s %>
+<%= image_tag @image.image_url.to_s, style: "max-width: 30%;"%>
 
 <%= image_tag @new_path %>
 
@@ -11,3 +11,5 @@
 
 <%= link_to 'Edit', edit_image_path(@image) %> |
 <%= link_to 'Back', images_path %>
+
+<%= render 'layouts/footer' %>

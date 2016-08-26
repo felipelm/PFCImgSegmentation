@@ -9,37 +9,14 @@ class ImagesController < ApplicationController
     @images = Image.all
   end
 
+  def home
+
+  end
+
   # GET /images/1
   # GET /images/1.json
   def show
-    if @image.image.to_s != ""
-      path = "/Users/felipemachado/Documents/rails/projects/PFCImgSegmentation/opencv-interface/public"
-      cvmat = OpenCV::CvMat.load(path+@image.image.to_s)
-      cvmat = cvmat.BGR2GRAY
-      canny = cvmat.canny(50, 150)
-      contour = canny.find_contours(:mode => OpenCV::CV_RETR_LIST, :method => OpenCV::CV_CHAIN_APPROX_SIMPLE)
-      while contour
-        unless contour.hole?
-          box = contour.bounding_rect
-          cvmat.rectangle! box.top_left, box.bottom_right, :color => OpenCV::CvColor::Black
-          box = contour.min_area_rect2
-        end
-        contour = contour.h_next
-      end
-      path2 = ""
-      @image.image.to_s.split('/').each_with_index do |im, i|
-        if i == @image.image.to_s.split('/').length-1
-          path2 += "/canny_"+im
-        elsif i != 0
-          path2 += "/"+im
-        end
-      end
-      broken_path = @image.image_url.to_s.split('/')
-      broken_path[broken_path.size-1] = "canny_"+broken_path[broken_path.size-1]
-      broken_path.join('/')
-      @new_path = broken_path.join('/')
-      cvmat.save_image(path+path2)
-    end
+    
   end
 
   # GET /images/new
