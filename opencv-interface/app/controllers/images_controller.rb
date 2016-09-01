@@ -16,7 +16,16 @@ class ImagesController < ApplicationController
   # GET /images/1
   # GET /images/1.json
   def show
-    
+
+  end
+
+  def processing
+    @image = Image.find(params[:imgId])
+    pre_processing(params) if has_pre_processing(params)
+    watershed_processing(params) if has_watershed_ime(params)
+    watershed_opencv_processing(params) if has_watershed_opencv(params)
+    post_processing(params) if has_post_processing(params)
+    head :no_content
   end
 
   # GET /images/new
@@ -77,5 +86,100 @@ class ImagesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def image_params
       params.require(:image).permit(:image_path, :image)
+    end
+
+    def has_pre_processing(params)
+      return params[:dispersion] == "true" || params[:variance] == "true" || params[:median] == "true"
+    end
+
+    def has_watershed_opencv(params)
+      return params[:watershed_opencv] == "true"
+    end
+
+    def has_watershed_ime(params)
+      return params[:watershed_ime] == "true"
+    end
+
+    def has_post_processing(params)
+      return params[:merge] == "true"
+    end
+
+    def pre_processing(params)
+      if params[:dispersion] == "true"
+        dispersion(params)
+      elsif params[:variance] == "true"
+        variance(params)
+      else
+        copy_original
+      end
+
+      if params[:median] == "true"
+        median(params)
+      end
+    end
+
+    def copy_original
+      original_image = `pwd`.chomp+@image.image_url
+      destination_image = `pwd`.chomp+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_pre.jpg"
+      result = "cp "+original_image+" "+destination_image
+      `#{result}`
+    end
+
+    def dispersion(params)
+      exec_path = "./vendor/assets/opencv/Dispersion"
+      original_image = " -o "+`pwd`.chomp+"/public"+@image.image_url
+      destination_image = " -d "+`pwd`.chomp+"/public"+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_pre.jpg"
+      threshold = " -t "+params[:dispT]
+      window_size = " -f "+params[:dispJ]
+      result = exec_path + original_image + destination_image + threshold + window_size
+      `#{result}`
+    end
+
+    def variance(params)
+      exec_path = "./vendor/assets/opencv/Variance"
+      original_image = " -o "+`pwd`.chomp+"/public"+@image.image_url
+      destination_image = " -d "+`pwd`.chomp+"/public"+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_pre.jpg"
+      threshold = " -t "+params[:varT]
+      window_size = " -f "+params[:varJ]
+      result = exec_path + original_image + destination_image + threshold + window_size
+      `#{result}`
+    end
+
+    def median(params)
+      exec_path = "./vendor/assets/opencv/Median"
+      original_image = " -o "+`pwd`.chomp+"/public"+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_pre.jpg"
+      destination_image = " -d "+`pwd`.chomp+"/public"+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_pre.jpg"
+      filter_size = " -f "+params[:medJ]
+      result = exec_path + original_image + destination_image + filter_size
+      `#{result}`
+    end
+
+    def watershed_processing(params)
+      exec_path = "./vendor/assets/opencv/Watershed"
+      original_image = " -o "+`pwd`.chomp+"/public"+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_pre.jpg"
+      destination_image = " -d "+`pwd`.chomp+"/public"+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_wat.jpg"
+      filter_size = " -f "+params[:watT]
+      result = exec_path + original_image + destination_image + filter_size
+      `#{result}`
+    end
+
+    def watershed_opencv_processing(params)
+      exec_path = "./vendor/assets/opencv/WatershedOpenCV"
+      original_image = " -o "+`pwd`.chomp+"/public"+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_pre.jpg"
+      destination_image = " -d "+`pwd`.chomp+"/public"+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_wat.jpg"
+      result = exec_path + original_image + destination_image
+      `#{result}`
+    end
+
+    def post_processing(params)
+      exec_path = "./vendor/assets/opencv/MergeRegion"
+      original_image = " -o "+`pwd`.chomp+"/public"+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_wat.jpg"
+      destination_image = " -d "+`pwd`.chomp+"/public"+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_post.jpg"
+      dispersion_image = " -s "+`pwd`.chomp+"/public"+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_pre.jpg"
+      threshold = " -t "+params[:merT]
+      window_size = " -f "+params[:merJ]
+      repeat = " -r "+params[:merR]
+      result = exec_path + original_image + destination_image + threshold + window_size + repeat + dispersion_image
+      `#{result}`
     end
 end

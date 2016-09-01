@@ -1,30 +1,66 @@
-<%= image_tag @image.image_url.to_s, style: "max-width: 30%;"%>
+<div class="sk-folding-cube">
+  <div class="sk-cube1 sk-cube"></div>
+  <div class="sk-cube2 sk-cube"></div>
+  <div class="sk-cube4 sk-cube"></div>
+  <div class="sk-cube3 sk-cube"></div>
+</div>
 
-<%= image_tag @new_path %>
+<div align="center" style="vertical-align: middle;">
+  <%= image_tag @image.image_url.to_s, style: "max-width: 30%;"%>
+  <%= image_tag @image.image_url.to_s, id: "pre", style: "max-width: 30%;"%>
+  <%= image_tag @image.image_url.to_s, id: "post", style: "max-width: 30%;"%>
 
-<p>
-  <strong>Nome:</strong>
-  <%= @image.image_path %>
-</p>
+  <%= image_tag @new_path %>
 
-<%= link_to 'Processamento', processings_path %> |
-<%= link_to 'Edit', edit_image_path(@image) %> |
-<%= link_to 'Back', images_path %>
+  <p>
+    <strong>Nome:</strong>
+    <%= @image.image_path %>
+  </p>
+
+  <%= link_to 'Processamento', processings_path %> |
+  <%= link_to 'Edit', edit_image_path(@image) %> |
+  <%= link_to 'Back', images_path %>
+</div>
 
 <%= render 'layouts/footer' %>
 
 <script type="text/javascript">
   $( document ).ready(function() {
 
+    $(".sk-folding-cube").hide();
+
     var success = function( data ) {
+      var src = '<%= File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_pre.jpg" %>?'+ new Date().getTime();;
+      $('#pre').attr("src", src);
+
+      var src = '<%= File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_post.jpg" %>?'+ new Date().getTime();;
+      $('#post').attr("src", src);
+      $(".sk-folding-cube").hide();
 
     };
 
-    var ajax_process_image = function(data1) {
+    var ajax_process_image = function(imgId, dispersion, variance, median, watershed_ime,
+      watershed_opencv, merge, dispT, dispJ, varT, varJ, medJ, watT, merT, merR, merJ) {
+      $(".sk-folding-cube").show();
       $.ajax({
-        url: "process",
+        url: "../../send_parameters",
         data: {
-          data1: data1
+          dispersion: dispersion,
+          variance: variance,
+          median: median,
+          watershed_ime: watershed_ime,
+          watershed_opencv: watershed_opencv,
+          merge: merge,
+          dispT: dispT,
+          dispJ: dispJ,
+          varT: varT,
+          varJ: varJ,
+          medJ: medJ,
+          watT: watT,
+          merT: merT,
+          merR: merR,
+          merJ: merJ,
+          imgId: imgId
         },
         dataType: 'json',
         type: 'GET',
@@ -37,8 +73,24 @@
     };
 
     var load_filters = function() {
-      var data1 = $('#ex1');
-      ajax_process_image(data1);
+      var dispersion = $('#exDisp-enabled')[0].checked;
+      var variance = $('#exVar-enabled')[0].checked;
+      var median = $('#exMed-enabled')[0].checked;
+      var watershed_ime = $('#watershedIME-enabled')[0].checked;
+      var watershed_opencv = $('#watershedOpencv-enabled')[0].checked;
+      var merge = $('#exMerge-enabled')[0].checked;
+      var dispT = $('#dispT').attr('value');
+      var dispJ = $('#dispJ').attr('value');
+      var varT = $('#varT').attr('value');
+      var varJ = $('#varJ').attr('value');
+      var medJ = $('#medJ').attr('value');
+      var watT = $('#watT').attr('value');
+      var merT = $('#merT').attr('value');
+      var merR = $('#merR').attr('value');
+      var merJ = $('#merJ').attr('value');
+      var imgId = <%= @image.id %>
+      ajax_process_image(imgId, dispersion, variance, median, watershed_ime,
+        watershed_opencv, merge, dispT, dispJ, varT, varJ, medJ, watT, merT, merR, merJ);
     }
 
     $('#apply').on('click', load_filters);

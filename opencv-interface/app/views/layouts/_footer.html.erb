@@ -2,47 +2,47 @@
 <!-- Navigation -->
 <nav id="mainNav" class="navbar navbar-default navbar-custom navbar-fixed-bottom affix">
     <div class="container" style="text-align: center;">
-      <div class="btn dropup">
+      <div class="btn dropup keep-open">
         <button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pre-Processamento</button>
         </button>
         <ul class="dropdown-menu" id="dispDD">
           <div class="btn" data-toggle="buttons">
             <label class="btn btn-primary active">
-              <input id="exDisp-enabled" type="radio" autocomplete="off"> Dispersão
+              <input id="exDisp-enabled" type="checkbox" autocomplete="off"> Dispersão
             </label>
 
-            <input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
-            <input id="ex2" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
+            <input id="dispJ" data-slider-id='ex1Slider' type="text" data-slider-min="1" data-slider-max="20" data-slider-step="2" data-slider-value="3" data-slider-enabled="false"/>
+            <input id="dispT" data-slider-id='ex1Slider' type="text" data-slider-min="1" data-slider-max="40" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
             <li role="separator" class="divider"></li>
             <label class="btn btn-primary active">
-              <input id="exVar-enabled" type="radio" autocomplete="off"> Variância
+              <input id="exVar-enabled" type="checkbox" autocomplete="off"> Variância
             </label>
-            <input id="ex3" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
-            <input id="ex4" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
+            <input id="varT" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
+            <input id="varJ" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
             <li role="separator" class="divider"></li>
             <label class="btn btn-primary active">
               <input id="exMed-enabled" type="checkbox" autocomplete="off"> Mediana
             </label>
-            <input id="ex5" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
+            <input id="medJ" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
           </div>
         </ul>
       </div>
-      <div class="btn dropup">
+      <div class="btn dropup keep-open">
         <button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Watershed</button>
         </button>
         <ul class="dropdown-menu">
           <div class="btn" data-toggle="buttons">
             <label class="btn btn-primary active">
-              <input id="watershedIME-enabled" type="radio" autocomplete="off"> Watershed IME
+              <input id="watershedIME-enabled" type="checkbox" autocomplete="off"> Watershed IME
             </label>
-            <input id="ex8" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
+            <input id="watT" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="7" data-slider-step="1" data-slider-value="1" data-slider-enabled="false"/>
             <label class="btn btn-primary active">
-              <input id="watershedOpencv-enabled" type="radio" autocomplete="off"> Watershed OpenCV
+              <input id="watershedOpencv-enabled" type="checkbox" autocomplete="off"> Watershed OpenCV
             </label>
           </div>
         </ul>
       </div>
-      <div class="btn dropup">
+      <div class="btn dropup keep-open">
         <button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pos-Processamento</button>
         </button>
         <ul class="dropdown-menu">
@@ -50,12 +50,13 @@
             <label class="btn btn-primary active">
               <input id="exMerge-enabled" type="checkbox" autocomplete="off"> Region Merge
             </label>
-            <input id="ex6" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
-            <input id="ex7" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
+            <input id="merT" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="2000" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
+            <input id="merJ" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="2000" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
+            <input id="merR" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="1" data-slider-enabled="false"/>
           </div>
         </ul>
       </div>
-      <button type="button" class="btn btn-info">Aplicar</button>
+      <button id="apply" type="button" class="btn btn-info">Aplicar</button>
       <button type="button" class="btn btn-warning">Reset</button>
       <button type="button" class="btn btn-success">Salvar</button>
       <button type="button" class="btn btn-danger">Cancelar</button>
@@ -68,10 +69,12 @@
   $("#exDisp-enabled").click(function() {
     if(this.checked) {
       // With JQuery
-      $("#ex1").slider("enable");
-      $("#ex2").slider("enable");
-      $("#ex3").slider("disable");
-      $("#ex4").slider("disable");
+      $("#dispT").slider("enable");
+      $("#dispJ").slider("enable");
+      $("#varT").slider("disable");
+      $("#varJ").slider("disable");
+      $("#exVar-enabled")[0].checked = false;
+
 
     }
   });
@@ -79,10 +82,11 @@
   $("#exVar-enabled").click(function() {
     if(this.checked) {
       // With JQuery
-      $("#ex3").slider("enable");
-      $("#ex4").slider("enable");
-      $("#ex1").slider("disable");
-      $("#ex2").slider("disable");
+      $("#varT").slider("enable");
+      $("#varJ").slider("enable");
+      $("#dispT").slider("disable");
+      $("#dispJ").slider("disable");
+      $("#exDisp-enabled")[0].checked = false;
 
     }
   });
@@ -90,91 +94,109 @@
   $("#watershedIME-enabled").click(function() {
     if(this.checked) {
       // With JQuery
-      $("#ex8").slider("enable");
+      $("#watT").slider("enable");
+      $("#watershedOpencv-enabled")[0].checked = false;
+    }else{
+      $("#watT").slider("disable");
     }
   });
 
   $("#watershedOpencv-enabled").click(function() {
     if(this.checked) {
       // With JQuery
-      $("#ex8").slider("disable");
+      $("#watT").slider("disable");
+      $("#watershedIME-enabled")[0].checked = false;
     }
   });
 
   $("#exMed-enabled").click(function() {
     if(this.checked) {
       // With JQuery
-      $("#ex5").slider("enable");
+      $("#medJ").slider("enable");
     }
     else {
       // With JQuery
-      $("#ex5").slider("disable");
+      $("#medJ").slider("disable");
     }
   });
 
   $("#exMerge-enabled").click(function() {
     if(this.checked) {
       // With JQuery
-      $("#ex6").slider("enable");
-      $("#ex7").slider("enable");
+      $("#merT").slider("enable");
+      $("#merR").slider("enable");
+      $("#merJ").slider("enable");
     }
     else {
       // With JQuery
-      $("#ex6").slider("disable");
-      $("#ex7").slider("disable");
+      $("#merT").slider("disable");
+      $("#merR").slider("disable");
+      $("#merJ").slider("disable");
     }
   });
 
-  $('#ex1').slider({
-    formatter: function(value) {
-      return 'Janela Atual: ' + value;
-    }
-  });
-
-  $('#ex2').slider({
+  $('#dispT').slider({
     formatter: function(value) {
       return 'Threshold Atual: ' + value;
     }
   });
 
-  $('#ex3').slider({
+  $('#dispJ').slider({
     formatter: function(value) {
       return 'Janela Atual: ' + value;
     }
   });
 
-  $('#ex4').slider({
+  $('#varT').slider({
+    formatter: function(value) {
+      return 'Janela Atual: ' + value;
+    }
+  });
+
+  $('#varJ').slider({
     formatter: function(value) {
       return 'Threshold Atual: ' + value;
     }
   });
 
-  $('#ex5').slider({
+  $('#medJ').slider({
     formatter: function(value) {
       return 'Janela Atual: ' + value;
     }
   });
 
-  $('#ex6').slider({
+  $('#watT').slider({
     formatter: function(value) {
       return 'Janela Atual: ' + value;
     }
   });
 
-  $('#ex7').slider({
+  $('#merT').slider({
     formatter: function(value) {
       return 'Threshold Atual: ' + value;
     }
   });
 
-  $('#ex8').slider({
+  $('#merJ').slider({
     formatter: function(value) {
       return 'Janela Atual: ' + value;
+    }
+  });
+
+  $('#merR').slider({
+    formatter: function(value) {
+      return 'Numero de Repeticoes Atual: ' + value;
     }
   });
 
   $('.dropdown-menu').click(function(e) {
     e.stopPropagation();
+  });
+
+  $('.dropup.keep-open').on({
+      "shown.bs.dropdown": function() { this.closable = false; },
+      "click":             function() { this.closable = true; },
+      "hide.bs.dropdown":  function() { return this.closable; }
   });
 
   // $('#dispDD').hover(function(){

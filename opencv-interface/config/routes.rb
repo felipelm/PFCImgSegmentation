@@ -7,6 +7,8 @@ Rails.application.routes.draw do
     get "/", :to => "users/sessions#create"
   end
 
+  get "send_parameters" => "images#processing"
+
   authenticated :user do
     root 'images#home'
   end
