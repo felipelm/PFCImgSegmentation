@@ -22,8 +22,8 @@ class ImagesController < ApplicationController
   def processing
     @image = Image.find(params[:imgId])
     pre_processing(params) if has_pre_processing(params)
-    watershed_processing(params) if has_watershed_ime(params)
-    watershed_opencv_processing(params) if has_watershed_opencv(params)
+    watershed_processing(params) if has_watershed_ime(params) && !has_post_processing(params)
+    watershed_opencv_processing(params) if has_watershed_opencv(params) && !has_post_processing(params)
     post_processing(params) if has_post_processing(params)
     head :no_content
   end
@@ -157,29 +157,44 @@ class ImagesController < ApplicationController
     def watershed_processing(params)
       exec_path = "./vendor/assets/opencv/Watershed"
       original_image = " -o "+`pwd`.chomp+"/public"+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_pre.jpg"
-      destination_image = " -d "+`pwd`.chomp+"/public"+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_wat.jpg"
+      destination_image = " -d "+`pwd`.chomp+"/public"+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_post.jpg"
       filter_size = " -f "+params[:watT]
       result = exec_path + original_image + destination_image + filter_size
+      `#{result}`
+    end
+
+    def color_image(params)
+      exec_path = "./vendor/assets/opencv/Color"
+      original_image = " -o "+`pwd`.chomp+"/public"+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_post.jpg"
+      destination_image = " -d "+`pwd`.chomp+"/public"+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_post.jpg"
+      result = exec_path + original_image + destination_image
       `#{result}`
     end
 
     def watershed_opencv_processing(params)
       exec_path = "./vendor/assets/opencv/WatershedOpenCV"
       original_image = " -o "+`pwd`.chomp+"/public"+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_pre.jpg"
-      destination_image = " -d "+`pwd`.chomp+"/public"+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_wat.jpg"
+      destination_image = " -d "+`pwd`.chomp+"/public"+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_post.jpg"
       result = exec_path + original_image + destination_image
       `#{result}`
     end
 
     def post_processing(params)
-      exec_path = "./vendor/assets/opencv/MergeRegion"
-      original_image = " -o "+`pwd`.chomp+"/public"+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_wat.jpg"
+      exec_path = "./vendor/assets/opencv/MergeWatershed"
+      original_image = " -o "+`pwd`.chomp+"/public"+@image.image_url
       destination_image = " -d "+`pwd`.chomp+"/public"+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_post.jpg"
-      dispersion_image = " -s "+`pwd`.chomp+"/public"+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_pre.jpg"
-      threshold = " -t "+params[:merT]
-      window_size = " -f "+params[:merJ]
+      threshold_merge = " -t "+params[:merT]
       repeat = " -r "+params[:merR]
-      result = exec_path + original_image + destination_image + threshold + window_size + repeat + dispersion_image
+      threshold_disp = " -tD "+params[:dispT]
+      window_size_disp = " -fD "+params[:dispJ]
+
+      if params[:median] == "true"
+        filter_size_median = " -fM "+params[:medJ]
+      else
+        filter_size_median = " -fM 0"
+      end
+      result = exec_path + original_image + destination_image + threshold_merge + repeat +
+        threshold_disp + window_size_disp + filter_size_median
       `#{result}`
     end
 end

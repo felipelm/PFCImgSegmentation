@@ -50,8 +50,7 @@
             <label class="btn btn-primary active">
               <input id="exMerge-enabled" type="checkbox" autocomplete="off"> Region Merge
             </label>
-            <input id="merT" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="2000" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
-            <input id="merJ" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="2000" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
+            <input id="merT" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20000" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
             <input id="merR" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="1" data-slider-enabled="false"/>
           </div>
         </ul>
@@ -174,12 +173,6 @@
   $('#merT').slider({
     formatter: function(value) {
       return 'Threshold Atual: ' + value;
-    }
-  });
-
-  $('#merJ').slider({
-    formatter: function(value) {
-      return 'Janela Atual: ' + value;
     }
   });
 
