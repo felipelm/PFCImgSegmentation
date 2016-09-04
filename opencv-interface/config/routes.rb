@@ -8,10 +8,11 @@ Rails.application.routes.draw do
   end
 
   get "send_parameters" => "images#processing"
-  get "save_parameters" => "processings#save_processing"
+  get "save_parameters" => "processings#create"
+  get "choose_saved_processing" => "processings#choose_saved_processing"
 
   authenticated :user do
-    root 'images#home'
+    root 'images#index'
   end
 
   unauthenticated :user do
