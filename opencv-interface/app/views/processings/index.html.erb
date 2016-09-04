@@ -1,55 +1,54 @@
-<p id="notice"><%= notice %></p>
+<section id="portfolio">
+    <div class="container">
+        <div class="row">
+          <h1>Lista de Processamentos</h1>
 
-<h1>Listing Processings</h1>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Disp enable</th>
+                <th>Var enable</th>
+                <th>Median enable</th>
+                <th>Wat ime enable</th>
+                <th>Wat opencv enable</th>
+                <th>Merge enable</th>
+                <th>Dispt</th>
+                <th>Dispj</th>
+                <th>Vart</th>
+                <th>Varj</th>
+                <th>Medj</th>
+                <th>Watt</th>
+                <th>Mert</th>
+                <th>Merj</th>
+                <th colspan="2"></th>
+              </tr>
+            </thead>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Disp enable</th>
-      <th>Var enable</th>
-      <th>Median enable</th>
-      <th>Wat ime enable</th>
-      <th>Wat opencv enable</th>
-      <th>Merge enable</th>
-      <th>Dispt</th>
-      <th>Dispj</th>
-      <th>Vart</th>
-      <th>Varj</th>
-      <th>Medj</th>
-      <th>Watt</th>
-      <th>Mert</th>
-      <th>Merj</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @processings.each do |processing| %>
-      <tr>
-        <td><%= processing.name %></td>
-        <td><%= processing.disp_enable %></td>
-        <td><%= processing.var_enable %></td>
-        <td><%= processing.median_enable %></td>
-        <td><%= processing.wat_ime_enable %></td>
-        <td><%= processing.wat_opencv_enable %></td>
-        <td><%= processing.merge_enable %></td>
-        <td><%= processing.dispT %></td>
-        <td><%= processing.dispJ %></td>
-        <td><%= processing.varT %></td>
-        <td><%= processing.varJ %></td>
-        <td><%= processing.medJ %></td>
-        <td><%= processing.watT %></td>
-        <td><%= processing.merT %></td>
-        <td><%= processing.merJ %></td>
-        <td><%= link_to 'Show', processing %></td>
-        <td><%= link_to 'Edit', edit_processing_path(processing) %></td>
-        <td><%= link_to 'Destroy', processing, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Processing', new_processing_path %>
+            <tbody>
+              <% @processings.each do |processing| %>
+                <tr>
+                  <td><%= processing.name %></td>
+                  <td><%= processing.disp_enable %></td>
+                  <td><%= processing.var_enable %></td>
+                  <td><%= processing.median_enable %></td>
+                  <td><%= processing.wat_ime_enable %></td>
+                  <td><%= processing.wat_opencv_enable %></td>
+                  <td><%= processing.merge_enable %></td>
+                  <td><%= processing.dispT %></td>
+                  <td><%= processing.dispJ %></td>
+                  <td><%= processing.varT %></td>
+                  <td><%= processing.varJ %></td>
+                  <td><%= processing.medJ %></td>
+                  <td><%= processing.watT %></td>
+                  <td><%= processing.merT %></td>
+                  <td><%= processing.merJ %></td>
+                  <td><%= link_to 'Editar', edit_processing_path(processing) %></td>
+                  <td><%= link_to 'Deletar', processing, method: :delete, data: { confirm: 'Tem certeza?' } %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>

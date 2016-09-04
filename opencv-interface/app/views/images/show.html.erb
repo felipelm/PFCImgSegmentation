@@ -20,141 +20,57 @@
   </p>
 
   <%= link_to 'Processamento', processings_path %> |
-  <%= link_to 'Edit', edit_image_path(@image) %> |
-  <%= link_to 'Back', images_path %>
+  <%= link_to 'Editar', edit_image_path(@image) %> |
+  <%= link_to 'Voltar', images_path %>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Select</th>
+        <th>Name</th>
+        <th>Disp enable</th>
+        <th>Var enable</th>
+        <th>Median enable</th>
+        <th>Wat ime enable</th>
+        <th>Wat opencv enable</th>
+        <th>Merge enable</th>
+        <th>Dispt</th>
+        <th>Dispj</th>
+        <th>Vart</th>
+        <th>Varj</th>
+        <th>Medj</th>
+        <th>Watt</th>
+        <th>Mert</th>
+        <th>Merj</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @processings.each do |processing| %>
+        <tr>
+          <td><input type="radio" name="proc" value="<%= processing.id %>"></td>
+          <td><%= processing.name %></td>
+          <td><%= processing.disp_enable %></td>
+          <td><%= processing.var_enable %></td>
+          <td><%= processing.median_enable %></td>
+          <td><%= processing.wat_ime_enable %></td>
+          <td><%= processing.wat_opencv_enable %></td>
+          <td><%= processing.merge_enable %></td>
+          <td><%= processing.dispT %></td>
+          <td><%= processing.dispJ %></td>
+          <td><%= processing.varT %></td>
+          <td><%= processing.varJ %></td>
+          <td><%= processing.medJ %></td>
+          <td><%= processing.watT %></td>
+          <td><%= processing.merT %></td>
+          <td><%= processing.merJ %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
 </div>
 
 <%= render 'layouts/footer' %>
-
-<script type="text/javascript">
-  $( document ).ready(function() {
-
-    $(".sk-folding-cube").hide();
-
-    var success = function( data ) {
-      var src = '<%= File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_pre.jpg" %>?'+ new Date().getTime();;
-      $('#pre').attr("src", src);
-
-      var src = '<%= File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_post.jpg" %>?'+ new Date().getTime();;
-      $('#post').attr("src", src);
-      $(".sk-folding-cube").hide();
-
-    };
-
-    var ajax_process_image = function(imgId, dispersion, variance, median, watershed_ime,
-      watershed_opencv, merge, dispT, dispJ, varT, varJ, medJ, watT, merT, merR, merJ) {
-      $(".sk-folding-cube").show();
-      $.ajax({
-        url: "../../send_parameters",
-        data: {
-          dispersion: dispersion,
-          variance: variance,
-          median: median,
-          watershed_ime: watershed_ime,
-          watershed_opencv: watershed_opencv,
-          merge: merge,
-          dispT: dispT,
-          dispJ: dispJ,
-          varT: varT,
-          varJ: varJ,
-          medJ: medJ,
-          watT: watT,
-          merT: merT,
-          merR: merR,
-          merJ: merJ,
-          imgId: imgId
-        },
-        dataType: 'json',
-        type: 'GET',
-        crossDomain: true
-      }).success(success)
-      .error(function(xhr, status, error) {
-        console.log(error);
-        console.log(xhr);
-      });
-    };
-
-    var load_filters = function() {
-      var dispersion = $('#exDisp-enabled')[0].checked;
-      var variance = $('#exVar-enabled')[0].checked;
-      var median = $('#exMed-enabled')[0].checked;
-      var watershed_ime = $('#watershedIME-enabled')[0].checked;
-      var watershed_opencv = $('#watershedOpencv-enabled')[0].checked;
-      var merge = $('#exMerge-enabled')[0].checked;
-      var dispT = $('#dispT').attr('value');
-      var dispJ = $('#dispJ').attr('value');
-      var varT = $('#varT').attr('value');
-      var varJ = $('#varJ').attr('value');
-      var medJ = $('#medJ').attr('value');
-      var watT = $('#watT').attr('value');
-      var merT = $('#merT').attr('value');
-      var merR = $('#merR').attr('value');
-      var merJ = $('#merJ').attr('value');
-      var imgId = <%= @image.id %>
-      ajax_process_image(imgId, dispersion, variance, median, watershed_ime,
-        watershed_opencv, merge, dispT, dispJ, varT, varJ, medJ, watT, merT, merR, merJ);
-    }
-
-    $('#apply').on('click', load_filters);
-
-    var success_processings = function( data ) {
-      $('#save_container').removeClass("open")
-    };
-
-    var ajax_save_process = function(name, dispersion, variance, median, watershed_ime,
-      watershed_opencv, merge, dispT, dispJ, varT, varJ, medJ, merT, merR) {
-      $.ajax({
-        url: "../../save_parameters",
-        data: {
-          processing:{
-            name:name,
-            disp_enable: dispersion,
-            var_enable: variance,
-            median_enable: median,
-            wat_ime_enable: watershed_ime,
-            wat_opencv_enable: watershed_opencv,
-            merge_enable: merge,
-            dispT: dispT,
-            dispJ: dispJ,
-            varT: varT,
-            varJ: varJ,
-            medJ: medJ,
-            merT: merT,
-            merJ: merR
-          }
-        },
-        dataType: 'json',
-        type: 'GET',
-        crossDomain: true
-      }).success(success_processings)
-      .error(function(xhr, status, error) {
-        console.log(error);
-        console.log(xhr);
-      });
-    };
-
-    var save_filters = function(name) {
-      var dispersion = $('#exDisp-enabled')[0].checked;
-      var variance = $('#exVar-enabled')[0].checked;
-      var median = $('#exMed-enabled')[0].checked;
-      var watershed_ime = $('#watershedIME-enabled')[0].checked;
-      var watershed_opencv = $('#watershedOpencv-enabled')[0].checked;
-      var merge = $('#exMerge-enabled')[0].checked;
-      var dispT = $('#dispT').attr('value');
-      var dispJ = $('#dispJ').attr('value');
-      var varT = $('#varT').attr('value');
-      var varJ = $('#varJ').attr('value');
-      var medJ = $('#medJ').attr('value');
-      var merT = $('#merT').attr('value');
-      var merR = $('#merR').attr('value');
-      var name = $('#nome_processamento')[0].value;
-      ajax_save_process(name, dispersion, variance, median, watershed_ime,
-        watershed_opencv, merge, dispT, dispJ, varT, varJ, medJ, merT, merR);
-    }
-
-    $('#save').on('click', save_filters);
-
-
-
-  });
-</script>
+<%= render 'images/process_image' %>
+<%= render 'images/save_processing' %>

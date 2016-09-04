@@ -21,10 +21,6 @@ class ProcessingsController < ApplicationController
   def edit
   end
 
-  def save_processing
-    Processing.create(processing_params)
-  end
-
   # POST /processings
   # POST /processings.json
   def create
@@ -63,6 +59,11 @@ class ProcessingsController < ApplicationController
       format.html { redirect_to processings_url, notice: 'Processing was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def choose_saved_processing
+    @processing = Processing.find(params[:proc_id]).to_json
+    render json: @processing
   end
 
   private

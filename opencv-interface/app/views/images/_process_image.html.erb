@@ -1,0 +1,100 @@
+<script type="text/javascript">
+  $( document ).ready(function() {
+
+    $(".sk-folding-cube").hide();
+
+    var success = function( data ) {
+      var src = '<%= File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_pre.jpg" %>?'+ new Date().getTime();;
+      $('#pre').attr("src", src);
+
+      var src = '<%= File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_post.jpg" %>?'+ new Date().getTime();;
+      $('#post').attr("src", src);
+      $(".sk-folding-cube").hide();
+
+    };
+
+    var ajax_process_image = function(imgId, dispersion, variance, median, watershed_ime,
+      watershed_opencv, merge, dispT, dispJ, varT, varJ, medJ, watT, merT, merR, merJ) {
+      $(".sk-folding-cube").show();
+      $.ajax({
+        url: "../../send_parameters",
+        data: {
+          dispersion: dispersion,
+          variance: variance,
+          median: median,
+          watershed_ime: watershed_ime,
+          watershed_opencv: watershed_opencv,
+          merge: merge,
+          dispT: dispT,
+          dispJ: dispJ,
+          varT: varT,
+          varJ: varJ,
+          medJ: medJ,
+          watT: watT,
+          merT: merT,
+          merR: merR,
+          merJ: merJ,
+          imgId: imgId
+        },
+        dataType: 'json',
+        type: 'GET',
+        crossDomain: true
+      }).success(success)
+      .error(function(xhr, status, error) {
+        console.log(error);
+        console.log(xhr);
+      });
+    };
+
+    var load_filters = function() {
+      var dispersion = $('#exDisp-enabled')[0].checked;
+      var variance = $('#exVar-enabled')[0].checked;
+      var median = $('#exMed-enabled')[0].checked;
+      var watershed_ime = $('#watershedIME-enabled')[0].checked;
+      var watershed_opencv = $('#watershedOpencv-enabled')[0].checked;
+      var merge = $('#exMerge-enabled')[0].checked;
+      var dispT = $('#dispT').attr('value');
+      var dispJ = $('#dispJ').attr('value');
+      var varT = $('#varT').attr('value');
+      var varJ = $('#varJ').attr('value');
+      var medJ = $('#medJ').attr('value');
+      var watT = $('#watT').attr('value');
+      var merT = $('#merT').attr('value');
+      var merR = $('#merR').attr('value');
+      var merJ = $('#merJ').attr('value');
+      var imgId = <%= @image.id %>
+      ajax_process_image(imgId, dispersion, variance, median, watershed_ime,
+        watershed_opencv, merge, dispT, dispJ, varT, varJ, medJ, watT, merT, merR, merJ);
+    }
+
+    $('#apply').on('click', load_filters);
+
+    var success_processing_choice = function(data){
+      console.log(data);
+      ajax_process_image(<%= @image.id %>, data.disp_enable, data.var_enable, data.median_enable, data.wat_ime_enable,
+        data.wat_opencv_enable, data.merge_enable, data.dispT, data.dispJ, data.varT,
+        data.varJ, data.medJ, data.watT, data.merT, data.merJ, data.merJ);
+    }
+
+    var ajax_find_process = function(proc_id) {
+      $.ajax({
+        url: "../../choose_saved_processing",
+        data: {
+          proc_id: proc_id
+        },
+        dataType: 'json',
+        type: 'GET',
+        crossDomain: true
+      }).success(success_processing_choice)
+      .error(function(xhr, status, error) {
+        console.log(error);
+        console.log(xhr);
+      });
+    };
+
+    $('input[type=radio][name=proc]').change(function() {
+        ajax_find_process(this.value);
+    });
+  });
+
+</script>
