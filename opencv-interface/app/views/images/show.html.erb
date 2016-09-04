@@ -10,6 +10,8 @@
   <%= image_tag @image.image_url.to_s, id: "pre", style: "max-width: 30%;"%>
   <%= image_tag @image.image_url.to_s, id: "post", style: "max-width: 30%;"%>
 
+
+
   <%= image_tag @new_path %>
 
   <p>
@@ -94,5 +96,65 @@
     }
 
     $('#apply').on('click', load_filters);
+
+    var success_processings = function( data ) {
+      $('#save_container').removeClass("open")
+    };
+
+    var ajax_save_process = function(name, dispersion, variance, median, watershed_ime,
+      watershed_opencv, merge, dispT, dispJ, varT, varJ, medJ, merT, merR) {
+      $.ajax({
+        url: "../../save_parameters",
+        data: {
+          processing:{
+            name:name,
+            disp_enable: dispersion,
+            var_enable: variance,
+            median_enable: median,
+            wat_ime_enable: watershed_ime,
+            wat_opencv_enable: watershed_opencv,
+            merge_enable: merge,
+            dispT: dispT,
+            dispJ: dispJ,
+            varT: varT,
+            varJ: varJ,
+            medJ: medJ,
+            merT: merT,
+            merJ: merR
+          }
+        },
+        dataType: 'json',
+        type: 'GET',
+        crossDomain: true
+      }).success(success_processings)
+      .error(function(xhr, status, error) {
+        console.log(error);
+        console.log(xhr);
+      });
+    };
+
+    var save_filters = function(name) {
+      var dispersion = $('#exDisp-enabled')[0].checked;
+      var variance = $('#exVar-enabled')[0].checked;
+      var median = $('#exMed-enabled')[0].checked;
+      var watershed_ime = $('#watershedIME-enabled')[0].checked;
+      var watershed_opencv = $('#watershedOpencv-enabled')[0].checked;
+      var merge = $('#exMerge-enabled')[0].checked;
+      var dispT = $('#dispT').attr('value');
+      var dispJ = $('#dispJ').attr('value');
+      var varT = $('#varT').attr('value');
+      var varJ = $('#varJ').attr('value');
+      var medJ = $('#medJ').attr('value');
+      var merT = $('#merT').attr('value');
+      var merR = $('#merR').attr('value');
+      var name = $('#nome_processamento')[0].value;
+      ajax_save_process(name, dispersion, variance, median, watershed_ime,
+        watershed_opencv, merge, dispT, dispJ, varT, varJ, medJ, merT, merR);
+    }
+
+    $('#save').on('click', save_filters);
+
+
+
   });
 </script>

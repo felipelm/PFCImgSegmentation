@@ -21,6 +21,10 @@ class ProcessingsController < ApplicationController
   def edit
   end
 
+  def save_processing
+    Processing.create(processing_params)
+  end
+
   # POST /processings
   # POST /processings.json
   def create
@@ -69,6 +73,6 @@ class ProcessingsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def processing_params
-      params.require(:processing).permit(:image_id, :user_id)
+      params.require(:processing).permit(:name,:disp_enable, :var_enable, :median_enable, :wat_ime_enable, :wat_opencv_enable, :merge_enable, :dispT, :dispJ, :varT, :varJ, :medJ, :watT, :merT, :merJ)
     end
 end

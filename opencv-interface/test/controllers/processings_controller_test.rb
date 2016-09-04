@@ -18,7 +18,7 @@ class ProcessingsControllerTest < ActionController::TestCase
 
   test "should create processing" do
     assert_difference('Processing.count') do
-      post :create, processing: { image_id: @processing.image_id, user_id: @processing.user_id }
+      post :create, processing: { dispJ: @processing.dispJ, dispT: @processing.dispT, disp_enable: @processing.disp_enable, medJ: @processing.medJ, median_enable: @processing.median_enable, merJ: @processing.merJ, merT: @processing.merT, merge_enable: @processing.merge_enable, varJ: @processing.varJ, varT: @processing.varT, var_enable: @processing.var_enable, watT: @processing.watT, wat_ime_enable: @processing.wat_ime_enable, wat_opencv_enable: @processing.wat_opencv_enable }
     end
 
     assert_redirected_to processing_path(assigns(:processing))
@@ -35,7 +35,7 @@ class ProcessingsControllerTest < ActionController::TestCase
   end
 
   test "should update processing" do
-    patch :update, id: @processing, processing: { image_id: @processing.image_id, user_id: @processing.user_id }
+    patch :update, id: @processing, processing: { dispJ: @processing.dispJ, dispT: @processing.dispT, disp_enable: @processing.disp_enable, medJ: @processing.medJ, median_enable: @processing.median_enable, merJ: @processing.merJ, merT: @processing.merT, merge_enable: @processing.merge_enable, varJ: @processing.varJ, varT: @processing.varT, var_enable: @processing.var_enable, watT: @processing.watT, wat_ime_enable: @processing.wat_ime_enable, wat_opencv_enable: @processing.wat_opencv_enable }
     assert_redirected_to processing_path(assigns(:processing))
   end
 

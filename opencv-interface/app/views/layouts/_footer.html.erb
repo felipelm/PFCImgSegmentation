@@ -35,7 +35,6 @@
             <label class="btn btn-primary active">
               <input id="watershedIME-enabled" type="checkbox" autocomplete="off"> Watershed IME
             </label>
-            <input id="watT" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="7" data-slider-step="1" data-slider-value="1" data-slider-enabled="false"/>
             <label class="btn btn-primary active">
               <input id="watershedOpencv-enabled" type="checkbox" autocomplete="off"> Watershed OpenCV
             </label>
@@ -56,9 +55,21 @@
         </ul>
       </div>
       <button id="apply" type="button" class="btn btn-info">Aplicar</button>
-      <button type="button" class="btn btn-warning">Reset</button>
-      <button type="button" class="btn btn-success">Salvar</button>
-      <button type="button" class="btn btn-danger">Cancelar</button>
+      <div id="save_container" class="btn dropup keep-open">
+        <button type="button" class="btn btn-success" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Salvar</button>
+        </button>
+        <ul class="dropdown-menu">
+          <div class="btn" data-toggle="buttons">
+            <span>Nome: </span>
+            <input id="nome_processamento" type="text"/>
+            <label class="btn btn-primary active">
+              <input id="save" type="checkbox" autocomplete="off"> Salvar
+            </label>
+          </div>
+        </ul>
+      </div>
+
+      <%= link_to 'Cancelar', images_path, class:"btn btn-danger", style: "color:#fff;" %>
 
     </div>
     <!-- /.container-fluid -->
@@ -159,12 +170,6 @@
   });
 
   $('#medJ').slider({
-    formatter: function(value) {
-      return 'Janela Atual: ' + value;
-    }
-  });
-
-  $('#watT').slider({
     formatter: function(value) {
       return 'Janela Atual: ' + value;
     }

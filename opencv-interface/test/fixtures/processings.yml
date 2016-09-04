@@ -1,9 +1,33 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  image_id: 
-  user_id: 
+  disp_enable: false
+  var_enable: false
+  median_enable: false
+  wat_ime_enable: false
+  wat_opencv_enable: false
+  merge_enable: false
+  dispT: 1
+  dispJ: 1
+  varT: 1
+  varJ: 1
+  medJ: 1
+  watT: 1
+  merT: 1
+  merJ: 1
 
 two:
-  image_id: 
-  user_id: 
+  disp_enable: false
+  var_enable: false
+  median_enable: false
+  wat_ime_enable: false
+  wat_opencv_enable: false
+  merge_enable: false
+  dispT: 1
+  dispJ: 1
+  varT: 1
+  varJ: 1
+  medJ: 1
+  watT: 1
+  merT: 1
+  merJ: 1

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160816190054) do
+ActiveRecord::Schema.define(version: 20160904020549) do
 
   create_table "commands", force: :cascade do |t|
     t.string   "cmd"
@@ -27,14 +27,24 @@ ActiveRecord::Schema.define(version: 20160816190054) do
   end
 
   create_table "processings", force: :cascade do |t|
-    t.integer  "image_id"
-    t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.boolean  "disp_enable"
+    t.boolean  "var_enable"
+    t.boolean  "median_enable"
+    t.boolean  "wat_ime_enable"
+    t.boolean  "wat_opencv_enable"
+    t.boolean  "merge_enable"
+    t.integer  "dispT"
+    t.integer  "dispJ"
+    t.integer  "varT"
+    t.integer  "varJ"
+    t.integer  "medJ"
+    t.integer  "watT"
+    t.integer  "merT"
+    t.integer  "merJ"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.string   "name"
   end
-
-  add_index "processings", ["image_id"], name: "index_processings_on_image_id"
-  add_index "processings", ["user_id"], name: "index_processings_on_user_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false

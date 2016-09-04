@@ -1,1 +1,1 @@
-json.extract! @processing, :id, :image_id, :user_id, :created_at, :updated_at
+json.extract! @processing, :id, :disp_enable, :var_enable, :median_enable, :wat_ime_enable, :wat_opencv_enable, :merge_enable, :dispT, :dispJ, :varT, :varJ, :medJ, :watT, :merT, :merJ, :created_at, :updated_at

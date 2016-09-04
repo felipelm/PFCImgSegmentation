@@ -12,12 +12,60 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :image_id %><br>
-    <%= f.text_field :image_id %>
+    <%= f.label :disp_enable %><br>
+    <%= f.check_box :disp_enable %>
   </div>
   <div class="field">
-    <%= f.label :user_id %><br>
-    <%= f.text_field :user_id %>
+    <%= f.label :var_enable %><br>
+    <%= f.check_box :var_enable %>
+  </div>
+  <div class="field">
+    <%= f.label :median_enable %><br>
+    <%= f.check_box :median_enable %>
+  </div>
+  <div class="field">
+    <%= f.label :wat_ime_enable %><br>
+    <%= f.check_box :wat_ime_enable %>
+  </div>
+  <div class="field">
+    <%= f.label :wat_opencv_enable %><br>
+    <%= f.check_box :wat_opencv_enable %>
+  </div>
+  <div class="field">
+    <%= f.label :merge_enable %><br>
+    <%= f.check_box :merge_enable %>
+  </div>
+  <div class="field">
+    <%= f.label :dispT %><br>
+    <%= f.number_field :dispT %>
+  </div>
+  <div class="field">
+    <%= f.label :dispJ %><br>
+    <%= f.number_field :dispJ %>
+  </div>
+  <div class="field">
+    <%= f.label :varT %><br>
+    <%= f.number_field :varT %>
+  </div>
+  <div class="field">
+    <%= f.label :varJ %><br>
+    <%= f.number_field :varJ %>
+  </div>
+  <div class="field">
+    <%= f.label :medJ %><br>
+    <%= f.number_field :medJ %>
+  </div>
+  <div class="field">
+    <%= f.label :watT %><br>
+    <%= f.number_field :watT %>
+  </div>
+  <div class="field">
+    <%= f.label :merT %><br>
+    <%= f.number_field :merT %>
+  </div>
+  <div class="field">
+    <%= f.label :merJ %><br>
+    <%= f.number_field :merJ %>
   </div>
   <div class="actions">
     <%= f.submit %>

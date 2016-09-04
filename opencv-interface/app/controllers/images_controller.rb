@@ -158,7 +158,7 @@ class ImagesController < ApplicationController
       exec_path = "./vendor/assets/opencv/Watershed"
       original_image = " -o "+`pwd`.chomp+"/public"+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_pre.jpg"
       destination_image = " -d "+`pwd`.chomp+"/public"+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_post.jpg"
-      filter_size = " -f "+params[:watT]
+      filter_size = " -f 1"
       result = exec_path + original_image + destination_image + filter_size
       `#{result}`
     end
