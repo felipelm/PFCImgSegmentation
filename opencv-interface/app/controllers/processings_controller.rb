@@ -25,11 +25,10 @@ class ProcessingsController < ApplicationController
   # POST /processings.json
   def create
     @processing = Processing.new(processing_params)
-
     respond_to do |format|
       if @processing.save
-        format.html { redirect_to @processing, notice: 'Processing was successfully created.' }
-        format.json { render :show, status: :created, location: @processing }
+        format.html { render json: @processing, status: :created }
+        format.json { render json: @processing, status: :created }
       else
         format.html { render :new }
         format.json { render json: @processing.errors, status: :unprocessable_entity }

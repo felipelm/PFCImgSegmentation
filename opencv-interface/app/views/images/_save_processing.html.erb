@@ -3,7 +3,12 @@ $( document ).ready(function() {
 
   var success_processings = function( data ) {
     $('#save_container').removeClass("open");
-    console.log("aqui");
+    select = $('select[name=processamentos]')[0];
+    option = document.createElement( 'option' );
+    console.log(data);
+    option.value = JSON.parse(data).id;
+    option.text = JSON.parse(data).name;
+    select.add( option );
   };
 
   var ajax_save_process = function(name, dispersion, variance, median, watershed_ime,

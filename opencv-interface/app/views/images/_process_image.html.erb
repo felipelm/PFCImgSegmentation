@@ -70,10 +70,62 @@
     $('#apply').on('click', load_filters);
 
     var success_processing_choice = function(data){
-      console.log(data);
       ajax_process_image(<%= @image.id %>, data.disp_enable, data.var_enable, data.median_enable, data.wat_ime_enable,
         data.wat_opencv_enable, data.merge_enable, data.dispT, data.dispJ, data.varT,
         data.varJ, data.medJ, data.watT, data.merT, data.merJ, data.merJ);
+        if(data.disp_enable){
+          $("#dispT").slider("enable");
+          $("#dispJ").slider("enable");
+          $("#varT").slider("disable");
+          $("#varJ").slider("disable");
+          $("#exDisp-enabled")[0].checked = true;
+          $("#dispT").slider("setValue",data.dispT);
+          $("#dispJ").slider("setValue",data.dispJ);
+        }else {
+          $("#exDisp-enabled")[0].checked = false;
+        }
+        if(data.var_enable){
+          $("#varT").slider("enable");
+          $("#varJ").slider("enable");
+          $("#dispT").slider("disable");
+          $("#dispJ").slider("disable");
+          $("#exVar-enabled")[0].checked = true;
+          $("#varT").slider("setValue",data.varT);
+          $("#varJ").slider("setValue",data.varJ);
+        }else {
+          $("#exVar-enabled")[0].checked = false;
+        }
+        if(data.median_enable){
+          $("#exMed-enabled")[0].checked = true;
+          $("#medJ").slider("enable");
+          $("#medJ").slider("setValue",data.medJ);
+        }else {
+          $("#exMed-enabled")[0].checked = false;
+          $("#medJ").slider("disable");
+        }
+        if(data.wat_ime_enable){
+          $("#watT").slider("enable");
+          $("#watershedIME-enabled")[0].checked = true;
+          $("#watershedOpencv-enabled")[0].checked = false;
+        }
+        if(data.wat_opencv_enable){
+          $("#watershedOpencv-enabled")[0].checked = true;
+          $("#watershedIME-enabled")[0].checked = false;
+        }
+        if(data.merge_enable){
+          $("#exMerge-enabled")[0].checked = true;
+          $("#merT").slider("enable");
+          $("#merR").slider("enable");
+          $("#merJ").slider("enable");
+          $("#merT").slider("setValue",data.merT);
+          $("#merJ").slider("setValue",data.merJ);
+          $("#merR").slider("setValue",data.merJ);
+        }else{
+          $("#exMerge-enabled")[0].checked = false;
+          $("#merT").slider("disable");
+          $("#merR").slider("disable");
+          $("#merJ").slider("disable");
+        }
     }
 
     var ajax_find_process = function(proc_id) {
@@ -92,7 +144,7 @@
       });
     };
 
-    $('input[type=radio][name=proc]').change(function() {
+    $('select[name=processamentos]').change(function() {
         ajax_find_process(this.value);
     });
   });
