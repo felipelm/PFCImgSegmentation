@@ -23,7 +23,9 @@
     <select name="processamentos">
       <option value="">-</option>
       <% @processings.each do |processing| %>
-        <option value="<%= processing.id %>"><%= processing.name %></option>
+        <% if processing.user_id == current_user.id %>
+          <option value="<%= processing.id %>"><%= processing.name %></option>
+        <% end %>
       <% end %>
     </select>
 

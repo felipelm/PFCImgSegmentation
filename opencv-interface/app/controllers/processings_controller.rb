@@ -25,6 +25,8 @@ class ProcessingsController < ApplicationController
   # POST /processings.json
   def create
     @processing = Processing.new(processing_params)
+    @processing.user_id = current_user.id
+
     respond_to do |format|
       if @processing.save
         format.html { render json: @processing, status: :created }

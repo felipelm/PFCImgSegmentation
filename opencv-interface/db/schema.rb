@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160904020549) do
+ActiveRecord::Schema.define(version: 20160909163450) do
 
   create_table "commands", force: :cascade do |t|
     t.string   "cmd"
@@ -24,7 +24,10 @@ ActiveRecord::Schema.define(version: 20160904020549) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string   "image"
+    t.integer  "user_id"
   end
+
+  add_index "images", ["user_id"], name: "index_images_on_user_id"
 
   create_table "processings", force: :cascade do |t|
     t.boolean  "disp_enable"
@@ -44,7 +47,10 @@ ActiveRecord::Schema.define(version: 20160904020549) do
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
     t.string   "name"
+    t.integer  "user_id"
   end
+
+  add_index "processings", ["user_id"], name: "index_processings_on_user_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
