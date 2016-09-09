@@ -3,21 +3,23 @@
     <div class="container">
         <div class="row">
           <% @images.each do |image| %>
-            <div class="col-md-4 col-sm-6 portfolio-item">
-              <%= link_to image, class: "portfolio-link" do %>
-                <div class="portfolio-hover">
-                    <div class="portfolio-hover-content">
-                        <i class="fa fa-plus fa-3x"></i>
-                    </div>
-                </div>
-                <%= image_tag image.image_url.to_s, class: "img-responsive" %>
-              <% end %>
-              <div class="portfolio-caption">
-                  <h4><%= image.image_path %></h4>
+            <% if image.user_id == current_user.id %>
+              <div class="col-md-4 col-sm-6 portfolio-item">
+                <%= link_to image, class: "portfolio-link" do %>
+                  <div class="portfolio-hover">
+                      <div class="portfolio-hover-content">
+                          <i class="fa fa-plus fa-3x"></i>
+                      </div>
+                  </div>
+                  <%= image_tag image.image_url.to_s, class: "img-responsive" %>
+                <% end %>
+                <div class="portfolio-caption">
+                    <h4><%= image.image_path %></h4>
 
-                  <p class="text-muted"><%= link_to 'Editar', edit_image_path(image) %> | <%= link_to 'Deletar', image, method: :delete, data: { confirm: 'Tem certeza?' } %></p>
+                    <p class="text-muted"><%= link_to 'Editar', edit_image_path(image) %> | <%= link_to 'Deletar', image, method: :delete, data: { confirm: 'Tem certeza?' } %></p>
+                </div>
               </div>
-            </div>
+            <% end %>
           <% end %>
         </div>
     </div>

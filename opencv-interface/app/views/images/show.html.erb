@@ -1,34 +1,36 @@
-<div class="sk-folding-cube">
-  <div class="sk-cube1 sk-cube"></div>
-  <div class="sk-cube2 sk-cube"></div>
-  <div class="sk-cube4 sk-cube"></div>
-  <div class="sk-cube3 sk-cube"></div>
-</div>
+<% if @image.user_id == current_user.id %>
+  <div class="sk-folding-cube">
+    <div class="sk-cube1 sk-cube"></div>
+    <div class="sk-cube2 sk-cube"></div>
+    <div class="sk-cube4 sk-cube"></div>
+    <div class="sk-cube3 sk-cube"></div>
+  </div>
 
-<div align="center" style="vertical-align: middle;">
-  <%= image_tag @image.image_url.to_s, style: "max-width: 30%;"%>
-  <%= image_tag @image.image_url.to_s, id: "pre", style: "max-width: 30%;"%>
-  <%= image_tag @image.image_url.to_s, id: "post", style: "max-width: 30%;"%>
-
-
-
-  <%= image_tag @new_path %>
-
-  <p>
-    <strong>Nome:</strong>
-    <%= @image.image_path %>
-  </p>
-  <span>Processamentos: </span>
-  <select name="processamentos">
-    <option value="">-</option>
-    <% @processings.each do |processing| %>
-      <option value="<%= processing.id %>"><%= processing.name %></option>
-    <% end %>
-  </select>
+  <div align="center" style="vertical-align: middle;">
+    <%= image_tag @image.image_url.to_s, style: "max-width: 30%;"%>
+    <%= image_tag @image.image_url.to_s, id: "pre", style: "max-width: 30%;"%>
+    <%= image_tag @image.image_url.to_s, id: "post", style: "max-width: 30%;"%>
 
 
-</div>
 
-<%= render 'layouts/footer' %>
-<%= render 'images/process_image' %>
-<%= render 'images/save_processing' %>
+    <%= image_tag @new_path %>
+
+    <p>
+      <strong>Nome:</strong>
+      <%= @image.image_path %>
+    </p>
+    <span>Processamentos: </span>
+    <select name="processamentos">
+      <option value="">-</option>
+      <% @processings.each do |processing| %>
+        <option value="<%= processing.id %>"><%= processing.name %></option>
+      <% end %>
+    </select>
+
+
+  </div>
+
+  <%= render 'layouts/footer' %>
+  <%= render 'images/process_image' %>
+  <%= render 'images/save_processing' %>
+<% end %>
