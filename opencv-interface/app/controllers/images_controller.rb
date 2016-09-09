@@ -21,7 +21,7 @@ class ImagesController < ApplicationController
 
   def processing
     @image = Image.find(params[:imgId])
-    pre_processing(params) if has_pre_processing(params)
+    pre_processing(params)
     watershed_processing(params) if has_watershed_ime(params) && !has_post_processing(params)
     watershed_opencv_processing(params) if has_watershed_opencv(params) && !has_post_processing(params)
     post_processing(params) if has_post_processing(params)
@@ -119,8 +119,8 @@ class ImagesController < ApplicationController
     end
 
     def copy_original
-      original_image = `pwd`.chomp+@image.image_url
-      destination_image = `pwd`.chomp+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_pre.jpg"
+      original_image = `pwd`.chomp+"/public"+@image.image_url
+      destination_image = `pwd`.chomp+"/public"+File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_pre.jpg"
       result = "cp "+original_image+" "+destination_image
       `#{result}`
     end
