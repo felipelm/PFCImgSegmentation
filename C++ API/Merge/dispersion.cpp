@@ -1,8 +1,14 @@
-#include<opencv2/imgproc/imgproc.hpp>
-#include<opencv2/highgui/highgui.hpp>
-#include<iostream>
+//
+//  dispersion.cpp
+//  openCV Pacote
+//
+//  Created by Felipe Machado and Thiago Vasconcelos on 03/07/16.
+//  Copyright © 2016 Felipe Machado. All rights reserved.
+//
+
+#include "handler.hpp"
+#include <opencv2/opencv.hpp>
 using namespace cv;
-using namespace std;
 
 Mat Dispersion(Mat img, int filterSize, float threshold){
     Mat dispersionImage = img.clone();
@@ -36,38 +42,4 @@ Mat Dispersion(Mat img, int filterSize, float threshold){
         }
     }
     return dispersionImage;
-}
-
-int main( int argc, char** argv )
-{
-    char *p=argv[0];
-    int filterSize = 3, threshold= 7;
-    string origin="", destination="";
-    for(int i=0; i<argc; i++){
-        p = argv[i];
-        cout<<p<<endl;
-        if(strcmp(p, "-t") == 0){
-            threshold = atoi(argv[i+1]);
-        }
-        if(strcmp(p, "-f") == 0){
-            filterSize = atoi(argv[i+1]);
-        }
-        if(strcmp(p, "-o") == 0){
-            origin = argv[i+1];
-        }
-        if(strcmp(p, "-d") == 0){
-            destination = argv[i+1];
-        }
-    }
-    if(origin.compare("") == 0 || destination.compare("") == 0){
-        cout<<"NO DESTINATION OR ORIGIN"<<endl;
-        return -1;
-    }
-    
-    Mat src = imread(origin);
-    cvtColor(src, src, CV_BGR2GRAY);
-    Mat result = Dispersion(src, filterSize, threshold);
-
-    imwrite(destination,result);
-    return 0;
 }

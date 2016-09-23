@@ -37,7 +37,7 @@ Mat watershedOpencv(Mat src, Mat srcAux)
     // convert back to 8bits gray scale
     imgResult.convertTo(imgResult, CV_8UC3);
     imgLaplacian.convertTo(imgLaplacian, CV_8UC3);
-
+    
     srcAux = imgResult; // copy back
     // Create binary image from source image
     Mat bw;
@@ -120,7 +120,7 @@ int main( int argc, char** argv )
         cout<<"NO DESTINATION OR ORIGIN"<<endl;
         return -1;
     }
-
+    
     Mat src = imread(origin);
     Mat srcAux = src.clone();
     cvtColor(srcAux, srcAux, CV_BGR2GRAY);

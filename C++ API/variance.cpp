@@ -2,9 +2,6 @@
 using namespace cv;
 using namespace std;
 
-#include <opencv2/opencv.hpp>
-using namespace cv;
-
 Mat Variance(Mat img, int filterSize, float threshold){
     Mat varianceImage = img.clone();
     float variance, sum = 0;
@@ -21,12 +18,12 @@ Mat Variance(Mat img, int filterSize, float threshold){
                     element = (float)img.at<uchar>(y - filterSize/2 + j ,x - filterSize/2 + i);
                     mean += element/(filterSize*filterSize);
                     sum +=element*element/(filterSize*filterSize);
-
+                    
                 }
             }
             variance = sum - mean*mean;
             if(variance>threshold)    varianceImage.at<uchar>(y,x) = variance;
-
+            
         }
     }
     return varianceImage;
@@ -57,7 +54,7 @@ int main( int argc, char** argv )
         cout<<"NO DESTINATION OR ORIGIN"<<endl;
         return -1;
     }
-
+    
     Mat src = imread(origin);
     cvtColor(src, src, CV_BGR2GRAY);
     Mat result = Variance(src, filterSize, threshold);
