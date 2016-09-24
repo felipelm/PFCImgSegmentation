@@ -4,10 +4,12 @@
     $(".sk-folding-cube").hide();
 
     var success = function( data ) {
-      var src = '<%= File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_pre.jpg" %>?'+ new Date().getTime();;
+      $('#undo').css('display', data.undo);
+      $('#redo').css('display', data.redo);
+      var src = '<%= File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_pre.jpg" %>?'+ new Date().getTime();
       $('#pre').attr("src", src);
 
-      var src = '<%= File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_post.jpg" %>?'+ new Date().getTime();;
+      var src = '<%= File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_post.jpg" %>?'+ new Date().getTime();
       $('#post').attr("src", src);
       $(".sk-folding-cube").hide();
 
@@ -70,6 +72,8 @@
     $('#apply').on('click', load_filters);
 
     var success_processing_choice = function(data){
+      $('#undo').css('display', data.undo);
+      $('#redo').css('display', data.redo);
       ajax_process_image(<%= @image.id %>, data.disp_enable, data.var_enable, data.median_enable, data.wat_ime_enable,
         data.wat_opencv_enable, data.merge_enable, data.dispT, data.dispJ, data.varT,
         data.varJ, data.medJ, data.watT, data.merT, data.merJ, data.merJ);
@@ -147,6 +151,180 @@
     $('select[name=processamentos]').change(function() {
         ajax_find_process(this.value);
     });
+
+    var success_undo = function( data ) {
+      $('#undo').css('display', data.undo);
+      $('#redo').css('display', data.redo);
+      if(data.dispersion=="true"){
+        $("#dispT").slider("enable");
+        $("#dispJ").slider("enable");
+        $("#varT").slider("disable");
+        $("#varJ").slider("disable");
+        $("#exDisp-enabled")[0].checked = true;
+        $("#dispT").slider("setValue",parseInt(data.dispT));
+        $("#dispJ").slider("setValue",parseInt(data.dispJ));
+      }else {
+        $("#exDisp-enabled")[0].checked = false;
+      }
+      if(data.variance=="true"){
+        $("#varT").slider("enable");
+        $("#varJ").slider("enable");
+        $("#dispT").slider("disable");
+        $("#dispJ").slider("disable");
+        $("#exVar-enabled")[0].checked = true;
+        $("#varT").slider("setValue",parseInt(data.varT));
+        $("#varJ").slider("setValue",parseInt(data.varJ));
+      }else {
+        $("#exVar-enabled")[0].checked = false;
+      }
+      if(data.median=="true"){
+        $("#exMed-enabled")[0].checked = true;
+        $("#medJ").slider("enable");
+        $("#medJ").slider("setValue",parseInt(data.medJ));
+      }else {
+        $("#exMed-enabled")[0].checked = false;
+        $("#medJ").slider("disable");
+      }
+      if(data.watershed_ime=="true"){
+        $("#watT").slider("enable");
+        $("#watershedIME-enabled")[0].checked = true;
+        $("#watershedOpencv-enabled")[0].checked = false;
+      }
+      if(data.watershed_opencv=="true"){
+        $("#watershedOpencv-enabled")[0].checked = true;
+        $("#watershedIME-enabled")[0].checked = false;
+      }
+      if(data.merge=="true"){
+        $("#exMerge-enabled")[0].checked = true;
+        $("#merT").slider("enable");
+        $("#merR").slider("enable");
+        $("#merJ").slider("enable");
+        $("#merT").slider("setValue",parseInt(data.merT));
+        $("#merJ").slider("setValue",parseInt(data.merR));
+        $("#merR").slider("setValue",parseInt(data.merR));
+      }else{
+        $("#exMerge-enabled")[0].checked = false;
+        $("#merT").slider("disable");
+        $("#merR").slider("disable");
+        $("#merJ").slider("disable");
+      }
+      var src = '<%= File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_pre.jpg" %>?'+ new Date().getTime();
+      $('#pre').attr("src", src);
+
+      var src = '<%= File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_post.jpg" %>?'+ new Date().getTime();
+      $('#post').attr("src", src);
+      $(".sk-folding-cube").hide();
+
+    };
+
+    var ajax_undo_process_image = function() {
+      $(".sk-folding-cube").show();
+      $.ajax({
+        url: "../../undo_processing",
+        data: {
+        },
+        dataType: 'json',
+        type: 'GET',
+        crossDomain: true
+      }).success(success_undo)
+      .error(function(xhr, status, error) {
+        console.log(error);
+        console.log(xhr);
+      });
+    };
+
+    var undo_filters = function() {
+      ajax_undo_process_image();
+    }
+
+    $('#undo').on('click', undo_filters);
+
+    var success_redo = function( data ) {
+      $('#undo').css('display', data.undo);
+      $('#redo').css('display', data.redo);
+      if(data.dispersion=="true"){
+        $("#dispT").slider("enable");
+        $("#dispJ").slider("enable");
+        $("#varT").slider("disable");
+        $("#varJ").slider("disable");
+        $("#exDisp-enabled")[0].checked = true;
+        $("#dispT").slider("setValue",parseInt(data.dispT));
+        $("#dispJ").slider("setValue",parseInt(data.dispJ));
+      }else {
+        $("#exDisp-enabled")[0].checked = false;
+      }
+      if(data.variance=="true"){
+        $("#varT").slider("enable");
+        $("#varJ").slider("enable");
+        $("#dispT").slider("disable");
+        $("#dispJ").slider("disable");
+        $("#exVar-enabled")[0].checked = true;
+        $("#varT").slider("setValue",parseInt(data.varT));
+        $("#varJ").slider("setValue",parseInt(data.varJ));
+      }else {
+        $("#exVar-enabled")[0].checked = false;
+      }
+      if(data.median=="true"){
+        $("#exMed-enabled")[0].checked = true;
+        $("#medJ").slider("enable");
+        $("#medJ").slider("setValue",parseInt(data.medJ));
+      }else {
+        $("#exMed-enabled")[0].checked = false;
+        $("#medJ").slider("disable");
+      }
+      if(data.watershed_ime=="true"){
+        $("#watT").slider("enable");
+        $("#watershedIME-enabled")[0].checked = true;
+        $("#watershedOpencv-enabled")[0].checked = false;
+      }
+      if(data.watershed_opencv=="true"){
+        $("#watershedOpencv-enabled")[0].checked = true;
+        $("#watershedIME-enabled")[0].checked = false;
+      }
+      if(data.merge=="true"){
+        $("#exMerge-enabled")[0].checked = true;
+        $("#merT").slider("enable");
+        $("#merR").slider("enable");
+        $("#merJ").slider("enable");
+        $("#merT").slider("setValue",parseInt(data.merT));
+        $("#merJ").slider("setValue",parseInt(data.merR));
+        $("#merR").slider("setValue",parseInt(data.merR));
+      }else{
+        $("#exMerge-enabled")[0].checked = false;
+        $("#merT").slider("disable");
+        $("#merR").slider("disable");
+        $("#merJ").slider("disable");
+      }
+      var src = '<%= File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_pre.jpg" %>?'+ new Date().getTime();
+      $('#pre').attr("src", src);
+
+      var src = '<%= File.dirname(@image.image_url)+"/"+File.basename(@image.image_url,".*")+"_post.jpg" %>?'+ new Date().getTime();
+      $('#post').attr("src", src);
+      $(".sk-folding-cube").hide();
+
+    };
+
+    var ajax_redo_process_image = function() {
+      $(".sk-folding-cube").show();
+      $.ajax({
+        url: "../../redo_processing",
+        data: {
+        },
+        dataType: 'json',
+        type: 'GET',
+        crossDomain: true
+      }).success(success_redo)
+      .error(function(xhr, status, error) {
+        console.log(error);
+        console.log(xhr);
+      });
+    };
+
+    var redo_filters = function() {
+      ajax_redo_process_image();
+    }
+
+    $('#redo').on('click', redo_filters);
   });
 
 </script>

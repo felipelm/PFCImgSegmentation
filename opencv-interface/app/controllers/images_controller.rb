@@ -2,6 +2,9 @@ class ImagesController < ApplicationController
   before_action :set_image, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
 
+  @@processing_undo_stack = []
+  @@processing_redo_stack = []
+
   # GET /images
   # GET /images.json
   def index
@@ -19,12 +22,62 @@ class ImagesController < ApplicationController
   end
 
   def processing
+    @@processing_undo_stack.push(params)
+    exec_processing(params)
+    redo_undo = Hash.new
+    @@processing_redo_stack = []
+    if @@processing_undo_stack.size > 1
+      redo_undo[:undo] = 'inline-block'
+    else
+      redo_undo[:undo] = 'none'
+    end
+    if @@processing_redo_stack.size > 0
+      redo_undo[:redo] = 'inline-block'
+    else
+      redo_undo[:redo] = 'none'
+    end
+    render json: redo_undo
+  end
+
+  def exec_processing(params)
     @image = Image.find(params[:imgId])
     pre_processing(params)
     watershed_processing(params) if has_watershed_ime(params) && !has_post_processing(params)
     watershed_opencv_processing(params) if has_watershed_opencv(params) && !has_post_processing(params)
     post_processing(params) if has_post_processing(params)
-    head :no_content
+  end
+
+  def undo_processing
+    @@processing_redo_stack.push(@@processing_undo_stack.pop())
+    exec_processing(@@processing_undo_stack.last)
+    if @@processing_undo_stack.size > 1
+      @@processing_undo_stack.last[:undo] = 'inline-block'
+    else
+      @@processing_undo_stack.last[:undo] = 'none'
+    end
+    if @@processing_redo_stack.size > 0
+      @@processing_undo_stack.last[:redo] = 'inline-block'
+    else
+      @@processing_undo_stack.last[:redo] = 'none'
+    end
+    render json: @@processing_undo_stack.last
+  end
+
+  def redo_processing
+    last = @@processing_redo_stack.pop()
+    @@processing_undo_stack.push(last)
+    exec_processing(last)
+    if @@processing_undo_stack.size > 1
+      last[:undo] = 'inline-block'
+    else
+      last[:undo] = 'none'
+    end
+    if @@processing_redo_stack.size > 0
+      last[:redo] = 'inline-block'
+    else
+      last[:redo] = 'none'
+    end
+    render json: last
   end
 
   # GET /images/new
