@@ -5,7 +5,8 @@
       <div class="btn dropup keep-open">
         <button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pre-Processamento</button>
         </button>
-        <ul class="dropdown-menu" id="dispDD">
+        <ul class="dropdown-menu" id="pre_proc">
+          <p id="close-pre" style="float:right;margin-right: -1em;">x</p>
           <div class="btn" data-toggle="buttons">
             <label class="btn btn-primary active">
               <input id="exDisp-enabled" type="checkbox" autocomplete="off"> Dispersão
@@ -30,7 +31,8 @@
       <div class="btn dropup keep-open">
         <button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Watershed</button>
         </button>
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu" id="wat_proc">
+          <p id="close-wat" style="float:right;margin-right: -1em;">x</p>
           <div class="btn" data-toggle="buttons">
             <label class="btn btn-primary active">
               <input id="watershedIME-enabled" type="checkbox" autocomplete="off"> Watershed IME
@@ -44,7 +46,8 @@
       <div class="btn dropup keep-open">
         <button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pos-Processamento</button>
         </button>
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu" id="post_proc">
+          <p id="close-post" style="float:right;margin-right: -1em;">x</p>
           <div class="btn" data-toggle="buttons">
             <label class="btn btn-primary active">
               <input id="exMerge-enabled" type="checkbox" autocomplete="off"> Region Merge
@@ -197,6 +200,18 @@
       "shown.bs.dropdown": function() { this.closable = false; },
       "click":             function() { this.closable = true; },
       "hide.bs.dropdown":  function() { return this.closable; }
+  });
+
+  $('#close-pre').click(function(){
+    $('#pre_proc').parent().removeClass('open');
+  });
+
+  $('#close-wat').click(function(){
+    $('#wat_proc').parent().removeClass('open');
+  });
+
+  $('#close-post').click(function(){
+    $('#post_proc').parent().removeClass('open');
   });
 
   // $('#dispDD').hover(function(){
