@@ -16,3 +16,5 @@
 !/log/.keep
 /tmp
 /public
+/vendor/assets/opencv
+/config/secrets.yml
