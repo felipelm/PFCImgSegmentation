@@ -25,6 +25,10 @@
               <input id="exMed-enabled" type="checkbox" autocomplete="off"> Mediana
             </label>
             <input id="medJ" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" data-slider-enabled="false"/>
+            <li role="separator" class="divider"></li>
+            <label class="btn btn-primary active">
+              <input id="no-pre-proc" type="checkbox" autocomplete="off"> Sem Pré-Processamento
+            </label>
           </div>
         </ul>
       </div>
@@ -102,6 +106,20 @@
       $("#dispT").slider("disable");
       $("#dispJ").slider("disable");
       $("#exDisp-enabled")[0].checked = false;
+
+    }
+  });
+
+  $("#no-pre-proc").click(function() {
+    if(this.checked) {
+      // With JQuery
+      $("#varT").slider("disable");
+      $("#varJ").slider("disable");
+      $("#dispT").slider("disable");
+      $("#dispJ").slider("disable");
+      $("#exDisp-enabled")[0].checked = false;
+      $("#exVar-enabled")[0].checked = false;
+      $("#medJ").slider("disable");
 
     }
   });
