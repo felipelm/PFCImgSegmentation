@@ -21,6 +21,8 @@ Things you may want to cover:
 
 * Deployment instructions
 
+g++ -I /path/to/include/opencv -I /var/www/pfcsegmentacao/PFCImgSegmentation/opencv-interface/opencv2 -L/path/to/PFCImgSegmentation/opencv-interface/lib/ -g -o MergeWatershed  handler.hpp color.cpp dispersion.cpp main.cpp median.cpp mergeRegion.cpp watershed.cpp -lopencv_core -lopencv_imgproc -lopencv_highgui -lopencv_ml -lopencv_video -lopencv_features2d -lopencv_calib3d -lopencv_objdetect -lopencv_contrib -lopencv_legacy -lopencv_stitching
+
 * ...
 
 
